@@ -1,0 +1,398 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static admin_list %}
+
+{% block extrastyle %}
+  {{ block.super }}
+  <link rel="stylesheet" href="{% static "admin/css/dashboard.css" %}">
+  <style>
+    /* Personnalisation du style des cartes */
+    .dashboard-card {
+      background-color: #fff;
+      border-radius: 6px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+    
+    .dashboard-card-header {
+      background-color: #0066B3; /* Bleu Ivalua */
+      color: white;
+      padding: 12px 15px;
+      font-weight: bold;
+      font-size: 16px;
+    }
+    
+    .dashboard-card-content {
+      padding: 15px;
+    }
+    
+    .dashboard-card-footer {
+      background-color: #f8f8f8;
+      border-top: 1px solid #eee;
+      padding: 8px 15px;
+      font-size: 12px;
+      color: #666;
+    }
+    
+    .app-group {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+    
+    .welcome-message {
+      background-color: #f8f9fa;
+      padding: 20px;
+      border-radius: 6px;
+      margin-bottom: 30px;
+      border-left: 4px solid #FF9E1B; /* Orange Ivalua */
+    }
+    
+    .stats-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+    
+    .stat-card {
+      flex: 1;
+      min-width: 200px;
+      background-color: #fff;
+      border-radius: 6px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      padding: 15px;
+      text-align: center;
+    }
+    
+    .stat-value {
+      font-size: 28px;
+      font-weight: bold;
+      color: #0066B3; /* Bleu Ivalua */
+      margin: 10px 0;
+    }
+    
+    .stat-label {
+      color: #666;
+      font-size: 14px;
+    }
+    
+    .action-button {
+      display: inline-block;
+      background-color: #0066B3; /* Bleu Ivalua */
+      color: white;
+      padding: 8px 15px;
+      border-radius: 4px;
+      text-decoration: none;
+      margin-right: 10px;
+      margin-bottom: 10px;
+      transition: background-color 0.2s;
+    }
+    
+    .action-button:hover {
+      background-color: #004C8C;
+      color: white;
+    }
+    
+    .recent-actions {
+      margin-top: 30px;
+    }
+    
+    .module h2 {
+      background-color: #0066B3; /* Bleu Ivalua */
+    }
+  </style>
+{% endblock %}
+
+{% block coltype %}colMS{% endblock %}
+
+{% block bodyclass %}{{ block.super }} dashboard{% endblock %}
+
+{% block breadcrumbs %}{% endblock %}
+
+{% block nav-sidebar %}{% endblock %}
+
+{% block content %}
+<div id="content-main">
+  <!-- Message de bienvenue personnalisé -->
+  <div class="welcome-message">
+    <h2>{% trans "Welcome to P2P Ivalua Administration" %}</h2>
+    <p>{% trans "This administration panel allows you to manage the P2P platform, including users, suppliers and system configurations." %}</p>
+    {% if user.last_login %}
+    <p>{% trans "Your last login was on:" %} <strong>{{ user.last_login }}</strong></p>
+    {% endif %}
+  </div>
+
+  <!-- Statistiques du système -->
+  <div class="stats-container">
+    {% with user_count=0 supplier_count=0 %}
+    {% for app in admin_site.app_list %}
+      {% if app.app_label == 'authentication' %}
+        {% for model in app.models %}
+          {% if model.object_name == 'User' %}
+            {% with user_count=model.count %}
+            <div class="stat-card">
+              <div class="stat-label">{% trans "Total Users" %}</div>
+              <div class="stat-value">{{ user_count }}</div>
+            </div>
+            {% endwith %}
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+      
+      {% if app.app_label == 'suppliers' %}
+        {% for model in app.models %}
+          {% if model.object_name == 'Supplier' %}
+            {% with supplier_count=model.count %}
+            <div class="stat-card">
+              <div class="stat-label">{% trans "Total Suppliers" %}</div>
+              <div class="stat-value">{{ supplier_count }}</div>
+            </div>
+            {% endwith %}
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+      
+      {% if app.app_label == 'orders' %}
+        {% for model in app.models %}
+          {% if model.object_name == 'Order' %}
+            {% with order_count=model.count %}
+            <div class="stat-card">
+              <div class="stat-label">{% trans "Total Orders" %}</div>
+              <div class="stat-value">{{ order_count }}</div>
+            </div>
+            {% endwith %}
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+    {% endfor %}
+    
+    <div class="stat-card">
+      <div class="stat-label">{% trans "System Online Since" %}</div>
+      <div class="stat-value" style="font-size: 18px;">{{ user.date_joined|date }}</div>
+    </div>
+    {% endwith %}
+  </div>
+
+  <!-- Actions rapides -->
+  <div class="dashboard-card">
+    <div class="dashboard-card-header">{% trans "Quick Actions" %}</div>
+    <div class="dashboard-card-content">
+      <a href="{% url 'admin:authentication_user_add' %}" class="action-button">
+        <i class="fas fa-user-plus"></i> {% trans "Add User" %}
+      </a>
+      
+      <a href="{% url 'admin:suppliers_supplier_add' %}" class="action-button">
+        <i class="fas fa-building"></i> {% trans "Add Supplier" %}
+      </a>
+      
+      <a href="{% url 'admin:orders_order_add' %}" class="action-button">
+        <i class="fas fa-file-invoice"></i> {% trans "Add Order" %}
+      </a>
+      
+      <a href="{% url 'admin:admin_interface_theme_changelist' %}" class="action-button">
+        <i class="fas fa-palette"></i> {% trans "Customize Theme" %}
+      </a>
+    </div>
+  </div>
+
+  <!-- Applications organisées par groupes -->
+  <h2>{% trans "System Management" %}</h2>
+  
+  <div class="app-group">
+    <!-- User Management Group -->
+    <div class="dashboard-card">
+      <div class="dashboard-card-header">{% trans "User Management" %}</div>
+      <div class="dashboard-card-content">
+        {% for app in admin_site.app_list %}
+          {% if app.app_label == 'authentication' or app.app_label == 'auth' %}
+            {% for model in app.models %}
+              <div class="model-entry">
+                {% if model.admin_url %}
+                <a href="{{ model.admin_url }}">{{ model.name }}</a>
+                {% else %}
+                {{ model.name }}
+                {% endif %}
+                
+                {% if model.add_url %}
+                <span class="addlink">
+                  <a href="{{ model.add_url }}">{% trans "Add" %}</a>
+                </span>
+                {% endif %}
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+    
+    <!-- Supplier Management Group -->
+    <div class="dashboard-card">
+      <div class="dashboard-card-header">{% trans "Supplier Management" %}</div>
+      <div class="dashboard-card-content">
+        {% for app in admin_site.app_list %}
+          {% if app.app_label == 'suppliers' %}
+            {% for model in app.models %}
+              <div class="model-entry">
+                {% if model.admin_url %}
+                <a href="{{ model.admin_url }}">{{ model.name }}</a>
+                {% else %}
+                {{ model.name }}
+                {% endif %}
+                
+                {% if model.add_url %}
+                <span class="addlink">
+                  <a href="{{ model.add_url }}">{% trans "Add" %}</a>
+                </span>
+                {% endif %}
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+    
+    <!-- Order Management Group -->
+    <div class="dashboard-card">
+      <div class="dashboard-card-header">{% trans "Order Management" %}</div>
+      <div class="dashboard-card-content">
+        {% for app in admin_site.app_list %}
+          {% if app.app_label == 'orders' %}
+            {% for model in app.models %}
+              <div class="model-entry">
+                {% if model.admin_url %}
+                <a href="{{ model.admin_url }}">{{ model.name }}</a>
+                {% else %}
+                {{ model.name }}
+                {% endif %}
+                
+                {% if model.add_url %}
+                <span class="addlink">
+                  <a href="{{ model.add_url }}">{% trans "Add" %}</a>
+                </span>
+                {% endif %}
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+    
+    <!-- System Configuration Group -->
+    <div class="dashboard-card">
+      <div class="dashboard-card-header">{% trans "System Configuration" %}</div>
+      <div class="dashboard-card-content">
+        {% for app in admin_site.app_list %}
+          {% if app.app_label == 'admin_interface' or app.app_label == 'sites' %}
+            {% for model in app.models %}
+              <div class="model-entry">
+                {% if model.admin_url %}
+                <a href="{{ model.admin_url }}">{{ model.name }}</a>
+                {% else %}
+                {{ model.name }}
+                {% endif %}
+                
+                {% if model.add_url %}
+                <span class="addlink">
+                  <a href="{{ model.add_url }}">{% trans "Add" %}</a>
+                </span>
+                {% endif %}
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  
+  <!-- Autres applications -->
+  <h2>{% trans "Other Applications" %}</h2>
+  <div class="app-group">
+    {% for app in admin_site.app_list %}
+      {% if app.app_label != 'authentication' and app.app_label != 'auth' and app.app_label != 'suppliers' and app.app_label != 'orders' and app.app_label != 'admin_interface' and app.app_label != 'sites' %}
+        <div class="dashboard-card">
+          <div class="dashboard-card-header">{{ app.name }}</div>
+          <div class="dashboard-card-content">
+            {% for model in app.models %}
+              <div class="model-entry">
+                {% if model.admin_url %}
+                <a href="{{ model.admin_url }}">{{ model.name }}</a>
+                {% else %}
+                {{ model.name }}
+                {% endif %}
+                
+                {% if model.add_url %}
+                <span class="addlink">
+                  <a href="{{ model.add_url }}">{% trans "Add" %}</a>
+                </span>
+                {% endif %}
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+  <!-- Actions récentes -->
+  <div class="recent-actions">
+    <div class="module" id="recent-actions-module">
+      <h2>{% trans 'Recent Actions' %}</h2>
+      {% load log %}
+      {% get_admin_log 10 as admin_log for_user user %}
+      {% if admin_log %}
+        <ul class="actionlist">
+          {% for entry in admin_log %}
+            <li class="{% if entry.is_addition %}addlink{% endif %}{% if entry.is_change %}changelink{% endif %}{% if entry.is_deletion %}deletelink{% endif %}">
+              {% if entry.is_addition %}{% trans 'Added' %}{% endif %}
+              {% if entry.is_change %}{% trans 'Changed' %}{% endif %}
+              {% if entry.is_deletion %}{% trans 'Deleted' %}{% endif %}
+              {% if entry.content_type %}
+                <span class="mini">{% filter capfirst %}{{ entry.content_type.name }}{% endfilter %}</span>
+              {% else %}
+                <span class="mini">{% trans 'Unknown content' %}</span>
+              {% endif %}
+              {% if entry.object_repr %}
+                <a href="{{ entry.get_admin_url }}">{{ entry.object_repr }}</a>
+              {% else %}
+                <span class="mini">{% trans 'Unknown object' %}</span>
+              {% endif %}
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p>{% trans 'No recent actions.' %}</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block sidebar %}
+<div id="content-related">
+  <div class="module" id="user-tools-panel">
+    <h2>{% trans 'User Tools' %}</h2>
+    <ul>
+      <li><a href="{% url 'admin:password_change' %}">{% trans 'Change password' %}</a></li>
+      <li><a href="{% url 'admin:logout' %}">{% trans 'Log out' %}</a></li>
+    </ul>
+  </div>
+  
+  <div class="module" id="documentation-panel">
+    <h2>{% trans 'Documentation' %}</h2>
+    <ul>
+      <li><a href="https://docs.djangoproject.com/" target="_blank">Django Documentation</a></li>
+      <li><a href="/admin/doc/" target="_blank">{% trans 'System Documentation' %}</a></li>
+    </ul>
+  </div>
+  
+  <div class="module" id="system-info-panel">
+    <h2>{% trans 'System Info' %}</h2>
+    <ul>
+      <li>{% trans 'Django version:' %} {{ django_version|default:"5.2.1" }}</li>
+      <li>{% trans 'Python version:' %} {{ python_version|default:"3.10" }}</li>
+      <li>{% trans 'App version:' %} 1.0.0</li>
+    </ul>
+  </div>
+</div>
+{% endblock %}

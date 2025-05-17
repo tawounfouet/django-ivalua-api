@@ -1,0 +1,260 @@
+from django.db import models
+from django.utils.translation import gettext_lazy as _
+from core.models import BaseModel, StatusChoices
+from django.core.validators import MinValueValidator
+from decimal import Decimal
+from .chart_of_accounts import GeneralLedgerAccount
+from .accounting_base import FiscalYear, AccountingJournal, AccountingType
+from .reference_data import (
+    AccountingEntryType,
+    EngagementType,
+    ReconciliationType,
+    Activity,
+    ServiceType
+)
+
+
+class AccountingEntryStatus(models.TextChoices):
+    """
+    Status choices for accounting entries.
+    """
+    DRAFT = 'draft', _('Draft')
+    VALIDATED = 'validated', _('Validated')
+    POSTED = 'posted', _('Posted')
+    CANCELLED = 'cancelled', _('Cancelled')
+
+
+class AccountingEntry(BaseModel):
+    """
+    Represents an accounting entry (journal entry).
+    
+    An accounting entry is the record of a financial transaction in the accounting system.
+    Each entry may have multiple lines (debits and credits) that must balance.
+    """
+    entry_number = models.CharField(_("entry number"), max_length=50, unique=True, help_text=_("Unique identifier for the entry"))
+    journal = models.ForeignKey(
+        AccountingJournal, 
+        on_delete=models.PROTECT, 
+        related_name="entries",
+        help_text=_("The journal in which this entry is recorded")
+    )
+    fiscal_year = models.ForeignKey(
+        FiscalYear, 
+        on_delete=models.PROTECT, 
+        related_name="entries",
+        help_text=_("The fiscal year this entry belongs to")
+    )
+    entry_date = models.DateField(_("entry date"), help_text=_("Date of the accounting entry"))
+    posting_date = models.DateField(_("posting date"), null=True, blank=True, help_text=_("Date when the entry was posted to ledger"))
+    reference = models.CharField(_("reference"), max_length=100, blank=True, help_text=_("Reference or description for this entry"))
+    status = models.CharField(
+        _("status"),
+        max_length=20,
+        choices=AccountingEntryStatus.choices,
+        default=AccountingEntryStatus.DRAFT,
+        help_text=_("Current status of the accounting entry")
+    )
+    is_opening_balance = models.BooleanField(_("is opening balance"), default=False, help_text=_("Whether this is an opening balance entry"))
+    is_closing_entry = models.BooleanField(_("is closing entry"), default=False, help_text=_("Whether this is a closing entry"))
+    source_document = models.CharField(_("source document"), max_length=255, blank=True, null=True, help_text=_("The source document that triggered this entry"))
+    source_document_id = models.CharField(_("source document ID"), max_length=100, blank=True, null=True, help_text=_("The ID of the source document"))
+      # For automated generation of reversing entries
+    is_reversing_entry = models.BooleanField(_("is reversing entry"), default=False, help_text=_("Whether this is a reversing entry"))
+    original_entry = models.ForeignKey(
+        'self',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='reversing_entries',
+        help_text=_("The original entry that this entry reverses")
+    )
+    
+    # Additional fields from new reference data
+    entry_type = models.ForeignKey(
+        AccountingEntryType,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='entries',
+        help_text=_("Type of accounting entry (e.g., budget, analytical)")
+    )
+    engagement_type = models.ForeignKey(
+        EngagementType,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='entries',
+        help_text=_("Type of engagement (e.g., order, contract)")
+    )
+    activity = models.ForeignKey(
+        Activity,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='entries',
+        help_text=_("Activity associated with this entry")
+    )
+    service_type = models.ForeignKey(
+        ServiceType,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='entries',
+        help_text=_("Service type associated with this entry")
+    )
+    reconciliation_status = models.CharField(
+        _("reconciliation status"),
+        max_length=20,
+        null=True,
+        blank=True,
+        help_text=_("Status of reconciliation for this entry")
+    )
+    is_recurring = models.BooleanField(_("is recurring"), default=False, help_text=_("Whether this is a recurring entry"))
+    period_code = models.CharField(_("period code"), max_length=10, null=True, blank=True, help_text=_("Accounting period code"))
+    
+    class Meta:
+        verbose_name = _("Accounting Entry")
+        verbose_name_plural = _("Accounting Entries")
+        ordering = ["-entry_date", "-entry_number"]
+        indexes = [
+            models.Index(fields=['entry_date']),
+            models.Index(fields=['fiscal_year']),
+            models.Index(fields=['journal']),
+            models.Index(fields=['status']),
+        ]
+    
+    def __str__(self):
+        return f"{self.entry_number} ({self.journal.code}) - {self.entry_date}"
+    
+    @property
+    def total_debit(self):
+        """Returns the total debit amount for this entry."""
+        return self.lines.filter(is_debit=True).aggregate(
+            total=models.Sum('amount')
+        )['total'] or Decimal('0.00')
+    
+    @property
+    def total_credit(self):
+        """Returns the total credit amount for this entry."""
+        return self.lines.filter(is_debit=False).aggregate(
+            total=models.Sum('amount')
+        )['total'] or Decimal('0.00')
+    
+    @property
+    def is_balanced(self):
+        """Checks if the entry is balanced (total debits = total credits)."""
+        return self.total_debit == self.total_credit
+
+
+class AccountingEntryLine(BaseModel):
+    """
+    Represents a single line within an accounting entry.
+    
+    Each line is either a debit or credit to a specific general ledger account.
+    """
+    entry = models.ForeignKey(
+        AccountingEntry, 
+        on_delete=models.CASCADE, 
+        related_name="lines",
+        help_text=_("The parent accounting entry")
+    )
+    account = models.ForeignKey(
+        GeneralLedgerAccount, 
+        on_delete=models.PROTECT, 
+        related_name="entry_lines",
+        help_text=_("The general ledger account for this line")
+    )
+    line_number = models.PositiveIntegerField(_("line number"), help_text=_("Line number within the entry"))
+    description = models.CharField(_("description"), max_length=255, blank=True, help_text=_("Description of the accounting line"))
+    is_debit = models.BooleanField(_("is debit"), help_text=_("Whether this is a debit (True) or credit (False) line"))    amount = models.DecimalField(
+        _("amount"),
+        max_digits=15,
+        decimal_places=2,
+        validators=[MinValueValidator(Decimal('0.01'))],
+        help_text=_("Amount for this line")
+    )
+    auxiliary_account_type = models.ForeignKey(
+        AccountingType,
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        related_name="entry_lines",
+        help_text=_("Type of auxiliary account if applicable")
+    )
+    auxiliary_account_id = models.CharField(
+        _("auxiliary account ID"),
+        max_length=50,
+        blank=True,
+        null=True,
+        help_text=_("ID of the auxiliary account (e.g., supplier, customer)")
+    )
+    
+    # New reference fields
+    client_account_type = models.ForeignKey(
+        'reference_data.ClientAccountType',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="entry_lines",
+        help_text=_("Type of client account if applicable")
+    )
+    reconciliation_type = models.ForeignKey(
+        'reference_data.ReconciliationType',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="entry_lines",
+        help_text=_("Type of reconciliation if applicable")
+    )
+    payer_type = models.ForeignKey(
+        'reference_data.PayerType',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="entry_lines",
+        help_text=_("Type of payer if applicable")
+    )
+    pricing_type = models.ForeignKey(
+        'reference_data.PricingType',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="entry_lines",
+        help_text=_("Type of pricing if applicable")
+    )
+    reconciliation_code = models.CharField(
+        _("reconciliation code"),
+        max_length=20,
+        null=True, 
+        blank=True,
+        help_text=_("Code used for reconciliation of this line")
+    )
+    analytical_code = models.CharField(
+        _("analytical code"),
+        max_length=20,
+        null=True,
+        blank=True,
+        help_text=_("Analytical code for reporting")
+    )
+    municipality = models.ForeignKey(
+        'reference_data.Municipality',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="entry_lines",
+        help_text=_("Municipality associated with this line")
+    )
+    
+    class Meta:
+        verbose_name = _("Accounting Entry Line")
+        verbose_name_plural = _("Accounting Entry Lines")
+        ordering = ["entry", "line_number"]
+        unique_together = ['entry', 'line_number']
+        indexes = [
+            models.Index(fields=['account']),
+            models.Index(fields=['entry']),
+        ]
+    
+    def __str__(self):
+        transaction_type = "Debit" if self.is_debit else "Credit"
+        return f"{self.entry.entry_number}-{self.line_number}: {transaction_type} {self.amount} to {self.account.account_number}"

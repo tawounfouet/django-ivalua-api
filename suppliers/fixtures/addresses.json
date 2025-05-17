@@ -1,0 +1,67 @@
+[
+  {
+    "model": "suppliers.supplieraddress",
+    "pk": 1,
+    "fields": {
+      "supplier": 1,
+      "adr1": "FR",
+      "adr2": "123 Avenue des Champs-Élysées",
+      "adr3": "Bâtiment A",
+      "zip": "75008",
+      "city": "Paris",
+      "updated_at": "2023-01-30T00:00:00+00:00"
+    }
+  },
+  {
+    "model": "suppliers.supplieraddress",
+    "pk": 2,
+    "fields": {
+      "supplier": 2,
+      "adr1": "FR",
+      "adr2": "45 Rue de la République",
+      "adr3": "8ème étage",
+      "zip": "69002",
+      "city": "Lyon",
+      "updated_at": "2023-02-10T00:00:00+00:00"
+    }
+  },
+  {
+    "model": "suppliers.supplieraddress",
+    "pk": 3,
+    "fields": {
+      "supplier": 3,
+      "adr1": "FR",
+      "adr2": "12 Rue des Fleurs",
+      "adr3": "",
+      "zip": "92100",
+      "city": "Boulogne-Billancourt",
+      "updated_at": "2023-01-20T00:00:00+00:00"
+    }
+  },
+  {
+    "model": "suppliers.supplieraddress",
+    "pk": 4,
+    "fields": {
+      "supplier": 4,
+      "adr1": "FR",
+      "adr2": "8 Rue du Consultant",
+      "adr3": "Appt 203",
+      "zip": "33000",
+      "city": "Bordeaux",
+      "updated_at": "2023-03-05T00:00:00+00:00"
+    }
+  },
+  {
+    "model": "suppliers.supplieraddress",
+    "pk": 5,
+    "fields": {
+      "supplier": 5,
+      "adr1": "GB",
+      "adr2": "45 Oxford Street",
+      "adr3": "4th Floor",
+      "zip": "W1D 2DZ",
+      "city": "London",
+      "updated_at": "2023-02-15T00:00:00+00:00"
+    }
+  }
+]

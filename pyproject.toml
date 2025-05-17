@@ -1,0 +1,52 @@
+# pyproject.toml
+[tool.poetry]
+name = "django-ivalua-api"
+version = "0.1.0"
+description = "Django implementation of the Ivalua API"
+authors = ["Your Name <your.email@example.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+django = "^4.2.0"
+djangorestframework = "^3.14.0"
+psycopg2-binary = "^2.9.5"
+django-filter = "^22.1"
+django-cors-headers = "^3.13.0"
+pyyaml = "^6.0"
+python-dotenv = "^1.0.0"
+gunicorn = "^20.1.0"
+
+[tool.poetry.group.dev.dependencies]
+black = "^23.1.0"
+isort = "^5.12.0"
+flake8 = "^6.0.0"
+pytest = "^7.2.2"
+pytest-django = "^4.5.2"
+mypy = "^1.0.1"
+django-stubs = "^1.16.0"
+djangorestframework-stubs = "^1.8.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 100
+target-version = ['py310']
+include = '\.pyi?$'
+
+[tool.isort]
+profile = "black"
+line_length = 100
+
+[tool.mypy]
+python_version = "3.10"
+plugins = ["mypy_django_plugin.main", "mypy_drf_plugin.main"]
+warn_redundant_casts = true
+warn_unused_ignores = true
+disallow_any_generics = true
+disallow_untyped_defs = true
+disallow_untyped_calls = true
+
+[tool.django-stubs]
+django_settings_module = "ivalua_api.settings.development"

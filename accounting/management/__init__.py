@@ -1,0 +1,1 @@
+# Initialize management directory structure

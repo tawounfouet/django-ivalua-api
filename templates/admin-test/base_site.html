@@ -1,0 +1,78 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_urls static %}
+
+{% block extrahead %}
+{{ block.super }}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<style type="text/css">
+  .user-list {
+    margin-top: 20px;
+    max-height: 300px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    padding: 10px;
+  }
+  .user-list ul {
+    margin: 0;
+    padding: 0 0 0 20px;
+  }
+  .user-inactive {
+    color: #999;
+  }
+  .form-hint {
+    color: #666;
+    margin-top: 5px;
+    font-style: italic;
+  }
+</style>
+{% endblock %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+  <a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
+  &rsaquo; <a href="{% url 'admin:app_list' app_label=opts.app_label %}">{{ opts.app_config.verbose_name }}</a>
+  &rsaquo; <a href="{% url 'admin:authentication_user_changelist' %}">{{ opts.verbose_name_plural|capfirst }}</a>
+  &rsaquo; {% trans 'Send Email' %}
+</div>
+{% endblock %}
+
+{% block content %}
+<div id="content-main">
+  <h1>{% trans "Send Email to Selected Users" %}</h1>
+  
+  <div class="user-list">
+    <h2>{% trans "Recipients" %} ({{ users|length }})</h2>
+    <ul>
+      {% for user in users %}
+        <li{% if not user.is_active %} class="user-inactive"{% endif %}>
+          {{ user.email }} - {{ user.get_full_name }}
+          {% if not user.is_active %} ({% trans "inactive" %}){% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <form method="post">
+    {% csrf_token %}
+    <fieldset class="module aligned">
+      {% for field in form %}
+        <div class="form-row">
+          <div{% if field.errors %} class="errors"{% endif %}>
+            {{ field.errors }}
+            {{ field.label_tag }}
+            {{ field }}
+            {% if field.help_text %}
+              <p class="form-hint">{{ field.help_text }}</p>
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+    </fieldset>
+    
+    <div class="submit-row">
+      <input type="submit" class="default" value="{% trans 'Send Email' %}">
+      <a href="{% url 'admin:authentication_user_changelist' %}" class="button cancel-link">{% trans "Cancel" %}</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

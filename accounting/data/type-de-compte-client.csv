@@ -1,0 +1,43 @@
+CODE_TYPE_CPTE_CLT;LIB_TYPE_CPTE_CLT
+???;INCONNU
+ACD;Accédant                
+ADM;Administration          
+ASO;Association occupant
+ASS;Association             
+BAC;Bureau d'accueil (GDC)  
+BRS;Propriétaire BRS
+COM;Commercial              
+DCD;Locataire DCD           
+DEC;Demandeur Echange       
+DEN;Demandeur Entreprise 1% 
+DMA;Demandeur Mairie        
+DPR;Demandeur Préfecture    
+DSP;Demandeur Spontané      
+EDF;Tiers payeur            
+ENT;Entreprise              
+FOY;Foyer                   
+GDN;Gardien logt fonction   
+GDS;Ne pas utiliser
+LCP;LOC CONV PRECAIRE
+LOA;loc en attente entrée
+LOC;Locataire               
+LOP;Locataire PM            
+LPA;LOCA-PASS Autres CIL    
+LPO;LOCA-PASS Astria        
+N/A;NON APPICABLE
+OCD;Locataire ONV DCD
+OCP;LOC CONV PRECAIRE ONV
+ODT;Sans Droit ni Titre ONV
+OLC;Locataire ONV
+OLO;Bureau Accueil ONV
+OLP;LOCA-PASS Astria ONV
+PRO;Professionnel
+PUB;Panneau publicitaire    
+RSV;Réservataire            
+RTC;Local radio-télécom     
+SAL;SALARIE
+SDT;Sans Droit ni Titre     
+SQA;Squatter                
+STE;Société                 
+TER;Tertiaire
+TUP;TUP                     

@@ -1,0 +1,68 @@
+[
+  {
+    "model": "suppliers.supplierpartner",
+    "pk": 1,
+    "fields": {
+      "supplier": 1,
+      "orga_level": "DIV",
+      "orga_node": "DIV001",
+      "num_part": 1,
+      "status": "val"
+    }
+  },
+  {
+    "model": "suppliers.supplierpartner",
+    "pk": 2,
+    "fields": {
+      "supplier": 1,
+      "orga_level": "DIV",
+      "orga_node": "DIV002",
+      "num_part": 2,
+      "status": "val"
+    }
+  },
+  {
+    "model": "suppliers.supplierpartner",
+    "pk": 3,
+    "fields": {
+      "supplier": 2,
+      "orga_level": "DIV",
+      "orga_node": "DIV001",
+      "num_part": 3,
+      "status": "val"
+    }
+  },
+  {
+    "model": "suppliers.supplierpartner",
+    "pk": 4,
+    "fields": {
+      "supplier": 3,
+      "orga_level": "REG",
+      "orga_node": "REG001",
+      "num_part": 1,
+      "status": "val"
+    }
+  },
+  {
+    "model": "suppliers.supplierpartner",
+    "pk": 5,
+    "fields": {
+      "supplier": 4,
+      "orga_level": "DIV",
+      "orga_node": "DIV003",
+      "num_part": 1,
+      "status": "val"
+    }
+  },
+  {
+    "model": "suppliers.supplierpartner",
+    "pk": 6,
+    "fields": {
+      "supplier": 5,
+      "orga_level": "DIV",
+      "orga_node": "DIV002",
+      "num_part": 3,
+      "status": "ini"
+    }
+  }
+]

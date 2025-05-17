@@ -1,0 +1,105 @@
+[
+  {
+    "model": "suppliers.bankinginformation",
+    "pk": 1,
+    "fields": {
+      "supplier": 1,
+      "international_pay_id": "INTL001",
+      "account_number": "00020419401",
+      "bank_code": "10278",
+      "counter_code": "02131",
+      "rib_key": "26",
+      "bban": "1027802131000204194026",
+      "iban": "FR7610278021310002041940126",
+      "bic": "CMCIFR2A",
+      "country_code": "FR",
+      "bank_label": "Crédit Mutuel",
+      "creation_account_date": "2023-01-15",
+      "modification_account_date": null,
+      "updated_at": "2023-01-30T00:00:00+00:00"
+
+
+    }
+  },
+  {
+    "model": "suppliers.bankinginformation",
+    "pk": 2,
+    "fields": {
+      "supplier": 2,
+      "international_pay_id": "INTL002",
+      "account_number": "00034567890",
+      "bank_code": "30003",
+      "counter_code": "01234",
+      "rib_key": "42",
+      "bban": "3000301234000345678942",
+      "iban": "FR7630003012340003456789042",
+      "bic": "SOGEFRPP",
+      "country_code": "FR",
+      "bank_label": "Société Générale",
+      "creation_account_date": "2023-02-10",
+      "modification_account_date": null,
+      "updated_at": "2023-02-10T00:00:00+00:00"
+    }
+  },
+  {
+    "model": "suppliers.bankinginformation",
+    "pk": 3,
+    "fields": {
+      "supplier": 3,
+      "international_pay_id": "INTL003",
+      "account_number": "00076543210",
+      "bank_code": "30004",
+      "counter_code": "04321",
+      "rib_key": "13",
+      "bban": "3000404321000765432113",
+      "iban": "FR7630004043210007654321013",
+      "bic": "BNPAFRPP",
+      "country_code": "FR",
+      "bank_label": "BNP Paribas",
+      "creation_account_date": "2023-01-20",
+      "modification_account_date": null,
+      "updated_at": "2023-01-20T00:00:00+00:00"
+
+    }
+  },
+  {
+    "model": "suppliers.bankinginformation",
+    "pk": 4,
+    "fields": {
+      "supplier": 4,
+      "international_pay_id": "INTL004",
+      "account_number": "00098765432",
+      "bank_code": "30066",
+      "counter_code": "08765",
+      "rib_key": "22",
+      "bban": "3006608765000987654322",
+      "iban": "FR7630066087650009876543222",
+      "bic": "CMCIFRPP",
+      "country_code": "FR",
+      "bank_label": "CIC",
+      "creation_account_date": "2023-03-05",
+      "modification_account_date": "2023-05-10",
+      "updated_at": "2023-03-05T00:00:00+00:00"
+    }
+  },
+  {
+    "model": "suppliers.bankinginformation",
+    "pk": 5,
+    "fields": {
+      "supplier": 5,
+      "international_pay_id": "INTL005",
+      "account_number": "12345678",
+      "bank_code": "BARC",
+      "counter_code": "200000",
+      "rib_key": "",
+      "bban": "BARC20000012345678",
+      "iban": "GB29BARC20000012345678",
+      "bic": "BARCGB22",
+      "country_code": "GB",
+      "bank_label": "Barclays Bank",
+      "creation_account_date": "2023-01-30",
+      "modification_account_date": null,
+        "updated_at": "2023-01-30T00:00:00+00:00"
+    }
+  }
+]

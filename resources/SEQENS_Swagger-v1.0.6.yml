@@ -1,0 +1,3489 @@
+openapi: 3.0.1
+info:
+  title: SEQENS - Datahub
+  description: API collection converted from Postman
+  version: 1.0.6
+
+servers:
+  - url: "https://env11.ivalua.app/buyer/actionlogement/devmaint2/7wbj8"
+    description: Development Environment
+  - url: "https://env03.ivalua.com/buyer/actionlogement/rctmaint2/yfwag"
+    description: Recette Environment
+  - url: "https://env21.ivalua.app/buyer/actionlogement/sandboxmaint/rvr4t/"
+    description: Sandbox Environment
+
+tags:
+  - name: Authentification
+    description: Gestion des tokens d'accès via OAuth2
+  - name: API Testing
+    description: Présentation des différents modes de connexion (OAuth2, API Key via Header ou Query String) avec GET et POST
+  - name: API Fournisseur
+    description: API dédiée aux fournisseurs, accessible via OAuth2
+  - name: API Utilisateurs
+    description: API dédiée aux utilisateurs, accessible via OAuth2
+  - name: API Organisation
+    description: API dédiée aux organisations, accessible via OAuth2
+  - name: API Famille
+    description: API dédiée aux familles, accessible via OAuth2
+  - name: API Contrats
+    description: API dédiée aux contrats, accessible via OAuth2
+  - name: API Commandes
+    description: API dédiée aux commandes, accessible via OAuth2
+  - name: API Programmes
+    description: API dédiée aux programmes, accessible via OAuth2
+  - name: API Factures (GET)
+    description: API dédiée à la consultation des factures, accessible via OAuth2
+  - name: API Factures (POST)
+    description: API dédiée à la création des factures, accessible via OAuth2
+
+paths:
+  /api.aspx/v1.0/bas/seqens_test_key_oauth:
+    get:
+      tags:
+        - API Testing
+      summary: Test API - OAuth2
+      parameters:
+        - name: format
+          in: query
+          required: true
+          description: "Format de réponse souhaité. Valeurs possibles : `xml` ou `json`."
+          schema:
+            $ref: "#/components/schemas/FormatEnum"
+      
+      security:
+        - oauth2: []
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiTestResponse"
+    post:
+      tags:
+        - API Testing
+      summary: Test API - OAuth2
+      parameters:
+        - name: format
+          in: query
+          required: true
+          description: "Format de réponse souhaité. Valeurs possibles : `xml` ou `json`."
+          schema:
+            $ref: "#/components/schemas/FormatEnum"
+            
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ApiTestRequest"
+      security:
+        - oauth2: []
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiTestResponse"
+  /api.aspx/v1.0/bas/seqens_test_key_header:
+    get:
+      tags:
+        - API Testing
+      summary: Test API - Header
+      parameters:
+        - name: id
+          in: query
+          required: false
+          schema:
+            type: string
+          description: "Identifiant optionnel"
+
+        - name: format
+          in: query
+          required: true
+          description: "Format de réponse souhaité. Valeurs possibles : `xml` ou `json`."
+          schema:
+            $ref: "#/components/schemas/FormatEnum"
+
+      security:
+        - apikeyAuth: []
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiTestResponse"
+    post:
+      tags:
+        - API Testing
+      summary: Test API - Header
+      parameters:
+        - name: format
+          in: query
+          required: true
+          description: "Format de réponse souhaité. Valeurs possibles : `xml` ou `json`."
+          schema:
+            $ref: "#/components/schemas/FormatEnum"
+            
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ApiTestRequest"
+      security:
+        - apikeyAuth: []
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiTestResponse"
+  /api.aspx/v1.0/bas/seqens_test_key_qs:
+    get:
+      tags:
+        - API Testing
+      summary: Test API - Chaîne de requête
+      parameters:
+        - name: id
+          in: query
+          required: false
+          schema:
+            type: string
+          description: "Identifiant optionnel"
+          
+        - name: format
+          in: query
+          required: true
+          description: "Format de réponse souhaité. Valeurs possibles : `xml` ou `json`."
+          schema:
+            $ref: "#/components/schemas/FormatEnum"
+            
+      security:
+        - apikeyAuthQuery: []
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiTestResponse"
+    post:
+      tags:
+        - API Testing
+      summary: Test API - Chaîne de requête
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ApiTestRequest"
+      security:
+        - apikeyAuthQuery: []
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiTestResponse"
+
+  /api.aspx/v1.0/sup/suppliers:
+    get:
+      tags:
+        - API Fournisseur
+      summary: Récupération des fournisseurs (sans object_id)
+      parameters:
+        - name: mode
+          in: query
+          required: true
+          description: "Mode de récupération des fournisseurs. Valeurs possibles: `full` ou `diff`."
+          schema:
+            $ref: "#/components/schemas/ModeEnum"
+          
+        - name: format
+          in: query
+          required: true
+          description: "Format de réponse souhaité. Valeurs possibles : `xml` ou `json`."
+          schema:
+            $ref: "#/components/schemas/FormatEnum"
+
+        - name: date_from
+          in: query
+          required: false
+          schema:
+            oneOf:
+              - type: string
+                format: date
+              - type: integer
+                format: int64
+          description: |
+            Date de début pour filtrer les fournisseurs.
+            Accepté :
+            - format ISO 8601 (`YYYY-MM-DD`)
+            - ou timestamp Unix (secondes depuis epoch).
+        
+            **Règles spécifiques si `mode=diff` sans `tiers_code` ni `sup_code` :**
+            - `date_from` et `date_to` doivent être renseignés ensemble.
+            - `date_from` doit être antérieur à `date_to`.
+            - L'intervalle entre `date_from` et `date_to` ne doit pas dépasser 2 mois.
+
+            Si utilisé, seul les fournisseurs modifiés depuis cette date seront pris en compte.
+            
+        - name: date_to
+          in: query
+          required: false
+          schema:
+            oneOf:
+              - type: string
+                format: date
+              - type: integer
+                format: int64
+          description: |
+            Date de fin pour filtrer les fournisseurs.
+            Accepté :
+            - format ISO 8601 (`YYYY-MM-DD`)
+            - ou timestamp Unix (secondes depuis epoch).
+        
+            **Règles spécifiques si `mode=diff` sans `tiers_code` ni `sup_code` :**
+            - `date_from` et `date_to` doivent être renseignés ensemble.
+            - `date_from` doit être antérieur à `date_to`.
+            - L'intervalle entre `date_from` et `date_to` ne doit pas dépasser 2 mois.
+            
+            Si utilisé, seul les fournisseurs modifiés depuis cette date seront pris en compte.
+
+        - name: sup_code
+          in: query
+          required: false
+          schema:
+            type: string
+          description: |
+            Code fournisseur interne (Ivalua code ex: SUP000001).
+            Peut contenir plusieurs codes séparés par des virgules : `sup_code=SUP000001,SUP000002`.
+            Exemple : `sup_code=SUP000001,SUP000002`
+
+        - name: erp_code
+          in: query
+          required: false
+          schema:
+            type: string
+          description: |
+            Code IKOS du fournisseur.
+            Peut contenir plusieurs codes séparés par des virgules : `erp_code=ERP01,ERP02,ERP03`.
+            Exemple : `erp_code=ERP01,ERP02`
+
+        - name: tiers_code
+          in: query
+          required: false
+          schema:
+            type: string
+          description: |
+            Code tiers du fournisseur (ex: SIREN, SIRET, DUNS, TVA INTRA).
+            Peut contenir plusieurs codes séparés par des virgules : `tiers_code=123456789,987654321`.
+            Exemple : `tiers_code=123456789,987654321`
+
+        - name: sup_id
+          in: query
+          required: false
+          schema:
+            type: string
+          description: |
+            Identifiant unique du fournisseur (Ivalua).
+            Peut contenir plusieurs identifiants séparés par des virgules : `sup_id=123,456,789`.
+            Exemple : `sup_id=123,456`
+
+      security:
+        - apikeyAuthQuery: []
+
+      responses:
+        "200":
+          description: Liste des fournisseurs récupérée avec succès
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuppliersResponse"
+        "400":
+          description: Erreur de validation des paramètres d'entrée
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuppliersErrorResponse"
+  /api.aspx/v1.0/sup/suppliers/{object_id}:
+    get:
+      tags:
+        - API Fournisseur
+      summary: Récupération d'un fournisseur spécifique (avec object_id)
+      parameters:
+        - name: object_id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: "Un ID d'objet (identifiant unique du fournisseur, Ivalua) peut être spécifié dans le chemin en tant qu'origine."
+
+        - name: mode
+          in: query
+          required: true
+          description: "Mode de récupération des fournisseurs. Valeurs possibles: `full` ou `diff`."
+          schema:
+            $ref: "#/components/schemas/ModeEnum"
+          
+        - name: format
+          in: query
+          required: true
+          description: "Format de réponse souhaité. Valeurs possibles : `xml` ou `json`."
+          schema:
+            $ref: "#/components/schemas/FormatEnum"
+
+        - name: date_from
+          in: query
+          required: false
+          schema:
+            oneOf:
+              - type: string
+                format: date
+              - type: integer
+                format: int64
+          description: |
+            Date de début pour filtrer les fournisseurs.
+            Accepté :
+            - format ISO 8601 (`YYYY-MM-DD`)
+            - ou timestamp Unix (secondes depuis epoch).
+        
+            **Règles spécifiques si `mode=diff` sans `tiers_code` ni `sup_code` :**
+            - `date_from` et `date_to` doivent être renseignés ensemble.
+            - `date_from` doit être antérieur à `date_to`.
+            - L'intervalle entre `date_from` et `date_to` ne doit pas dépasser 2 mois.
+
+            Si utilisé, seul les fournisseurs modifiés depuis cette date seront pris en compte.
+            
+        - name: date_to
+          in: query
+          required: false
+          schema:
+            oneOf:
+              - type: string
+                format: date
+              - type: integer
+                format: int64
+          description: |
+            Date de fin pour filtrer les fournisseurs.
+            Accepté :
+            - format ISO 8601 (`YYYY-MM-DD`)
+            - ou timestamp Unix (secondes depuis epoch).
+        
+            **Règles spécifiques si `mode=diff` sans `tiers_code` ni `sup_code` :**
+            - `date_from` et `date_to` doivent être renseignés ensemble.
+            - `date_from` doit être antérieur à `date_to`.
+            - L'intervalle entre `date_from` et `date_to` ne doit pas dépasser 2 mois.
+            
+            Si utilisé, seul les fournisseurs modifiés depuis cette date seront pris en compte.
+
+        - name: sup_code
+          in: query
+          required: false
+          schema:
+            type: string
+          description: |
+            Code fournisseur interne (Ivalua code ex: SUP000001).
+            Peut contenir plusieurs codes séparés par des virgules : `sup_code=SUP000001,SUP000002`.
+            Exemple : `sup_code=SUP000001,SUP000002`
+
+        - name: erp_code
+          in: query
+          required: false
+          schema:
+            type: string
+          description: |
+            Code IKOS du fournisseur.
+            Peut contenir plusieurs codes séparés par des virgules : `erp_code=ERP01,ERP02,ERP03`.
+            Exemple : `erp_code=ERP01,ERP02`
+
+        - name: tiers_code
+          in: query
+          required: false
+          schema:
+            type: string
+          description: |
+            Code tiers du fournisseur (ex: SIREN, SIRET, DUNS, TVA INTRA).
+            Peut contenir plusieurs codes séparés par des virgules : `tiers_code=123456789,987654321`.
+            Exemple : `tiers_code=123456789,987654321`
+
+        - name: sup_id
+          in: query
+          required: false
+          schema:
+            type: string
+          description: |
+            Identifiant unique du fournisseur (Ivalua).
+            Peut contenir plusieurs identifiants séparés par des virgules : `sup_id=123,456,789`.
+            Exemple : `sup_id=123,456`
+
+      security:
+        - apikeyAuthQuery: []
+
+      responses:
+        "200":
+          description: Liste des fournisseurs récupérée avec succès
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuppliersResponse"
+        "400":
+          description: Erreur de validation des paramètres d'entrée
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuppliersErrorResponse"
+
+  /api.aspx/v1.0/usr/users:
+    get:
+      tags:
+        - API Utilisateurs
+      summary: Récupération des utilisateurs (sans object_id)
+      parameters:
+        - name: contact_id
+          in: query
+          description: "ID Ivalua de l'utilisateur"
+          required: false
+          schema:
+            type: integer
+            
+        - name: object_id
+          in: query
+          description: "ID Ivalua de l'utilisateur"
+          required: false
+          schema:
+            type: integer
+            
+        - name: date_from
+          in: query
+          required: false
+          schema:
+            oneOf:
+              - type: string
+                format: date
+              - type: integer
+                format: int64
+          description: |
+            Date de début pour filtrer les utilisateurs.
+            Accepté :
+            - format ISO 8601 (`YYYY-MM-DD`)
+            - ou timestamp Unix (secondes depuis epoch).
+        
+            **Règles spécifiques si `mode=diff` sans `tiers_code` ni `sup_code` :**
+            - `date_from` et `date_to` doivent être renseignés ensemble.
+            - `date_from` doit être antérieur à `date_to`.
+            - L'intervalle entre `date_from` et `date_to` ne doit pas dépasser 2 mois.
+
+            Si utilisé, seul les utilisateurs modifiés depuis cette date seront pris en compte.
+            
+        - name: date_to
+          in: query
+          required: false
+          schema:
+            oneOf:
+              - type: string
+                format: date
+              - type: integer
+                format: int64
+          description: |
+            Date de fin pour filtrer les utilisateurs.
+            Accepté :
+            - format ISO 8601 (`YYYY-MM-DD`)
+            - ou timestamp Unix (secondes depuis epoch).
+        
+            **Règles spécifiques si `mode=diff` sans `tiers_code` ni `sup_code` :**
+            - `date_from` et `date_to` doivent être renseignés ensemble.
+            - `date_from` doit être antérieur à `date_to`.
+            - L'intervalle entre `date_from` et `date_to` ne doit pas dépasser 2 mois.
+            
+            Si utilisé, seul les utilisateurs modifiés depuis cette date seront pris en compte.
+            
+        - name: login_name
+          in: query
+          description: "Nom de connexion (login_name) de l'utilisateur. Correspond au champ 'login' dans la réponse."
+          required: false
+          schema:
+            type: string
+            
+        - name: mode
+          in: query
+          required: true
+          description: "Mode de récupération des utilisateurs. Valeurs possibles: `full` ou `diff` et `scim`."
+          schema:
+            $ref: "#/components/schemas/ModeEnum"
+            
+        - name: format
+          in: query
+          required: true
+          description: "Format de réponse souhaité. Valeurs possibles : `xml` ou `json`."
+          schema:
+            $ref: "#/components/schemas/FormatEnum"
+          
+        - name: user_matricule
+          in: query
+          description: "Matricule de l'utilisateur"
+          required: false
+          schema:
+            type: string
+
+      security:
+        - apikeyAuth: []
+
+      responses:
+        "200":
+          description: "Liste des utilisateurs récupérés"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UsersResponse"
+        "400":
+          description: Erreur de validation des paramètres d'entrée
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UsersErrorResponse"
+  /api.aspx/v1.0/usr/users/{object_id}:
+    get:
+      tags:
+        - API Utilisateurs
+      summary: Récupération d'un utilisateur spécifique (avec object_id)
+      parameters:
+        - name: object_id
+          in: path
+          description: "ID Ivalua de l'utilisateur"
+          required: true
+          schema:
+            type: integer
+            
+        - name: date_from
+          in: query
+          required: false
+          schema:
+            oneOf:
+              - type: string
+                format: date
+              - type: integer
+                format: int64
+          description: |
+            Date de début pour filtrer les fournisseurs.
+            Accepté :
+            - format ISO 8601 (`YYYY-MM-DD`)
+            - ou timestamp Unix (secondes depuis epoch).
+        
+            **Règles spécifiques si `mode=diff` sans `tiers_code` ni `sup_code` :**
+            - `date_from` et `date_to` doivent être renseignés ensemble.
+            - `date_from` doit être antérieur à `date_to`.
+            - L'intervalle entre `date_from` et `date_to` ne doit pas dépasser 2 mois.
+
+            Si utilisé, seul les fournisseurs modifiés depuis cette date seront pris en compte.
+            
+        - name: date_to
+          in: query
+          required: false
+          schema:
+            oneOf:
+              - type: string
+                format: date
+              - type: integer
+                format: int64
+          description: |
+            Date de fin pour filtrer les fournisseurs.
+            Accepté :
+            - format ISO 8601 (`YYYY-MM-DD`)
+            - ou timestamp Unix (secondes depuis epoch).
+        
+            **Règles spécifiques si `mode=diff` sans `tiers_code` ni `sup_code` :**
+            - `date_from` et `date_to` doivent être renseignés ensemble.
+            - `date_from` doit être antérieur à `date_to`.
+            - L'intervalle entre `date_from` et `date_to` ne doit pas dépasser 2 mois.
+            
+            Si utilisé, seul les fournisseurs modifiés depuis cette date seront pris en compte.
+            
+        - name: login_name
+          in: query
+          description: "Nom de connexion (login_name) de l'utilisateur. Correspond au champ 'login' dans la réponse."
+          required: false
+          schema:
+            type: string
+
+        - name: mode
+          in: query
+          required: true
+          description: "Mode de récupération des utilisateurs. Valeurs possibles: `full` ou `diff`."
+          schema:
+            $ref: "#/components/schemas/ModeEnum"
+            
+        - name: format
+          in: query
+          required: true
+          description: "Format de réponse souhaité. Valeurs possibles : `xml` ou `json`."
+          schema:
+            $ref: "#/components/schemas/FormatEnum"
+          
+        - name: user_matricule
+          in: query
+          description: "Matricule de l'utilisateur"
+          required: false
+          schema:
+            type: string
+
+      security:
+        - apikeyAuth: []
+
+      responses:
+        "200":
+          description: "Liste des utilisateurs récupérés"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UsersResponse"
+        "400":
+          description: Erreur de validation des paramètres d'entrée
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UsersErrorResponse"
+
+  /api.aspx/v1.0/org/organizations:
+    get:
+      tags:
+        - API Organisation
+      summary: Récupération des organisations (sans object_id)
+      parameters:
+        - name: format
+          in: query
+          required: true
+          description: "Format de réponse souhaité. Valeurs possibles : `xml` ou `json`."
+          schema:
+            $ref: "#/components/schemas/FormatEnum"
+            
+        - name: hierarchy
+          in: query
+          required: false
+          schema:
+            type: string
+          description: "Code des différentes hiérarchies organisations."
+
+        - name: orga_min
+          in: query
+          required: false
+          schema:
+            type: integer
+          description: "Niveau d'organisation minimum voulu."
+
+        - name: orga_max
+          in: query
+          required: false
+          schema:
+            type: integer
+          description: "Niveau d'organisation maximum voulu."
+
+        - name: render
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [indented, treeview]
+            default: indented
+          description: "Mode d'affichage : 'default' ou 'treeview'. La valeur par défaut est 'indented'."
+
+        - name: language
+          in: query
+          required: false
+          schema:
+            type: string
+          description: "Langue désirée (code alpha-1 issu de l'ISO 639-1)."
+
+      security:
+        - apikeyAuth: []
+
+      responses:
+        "200":
+          description: Liste des organisations.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/OrgaTreeResponse"
+                  - $ref: "#/components/schemas/OrgaDefaultResponse"
+  /api.aspx/v1.0/org/organizations/{object_id}:
+    get:
+      tags:
+        - API Organisation
+      summary: Récupération d'une organisation spécifique (avec object_id)
+      parameters:
+        - name: object_id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: "Un ID d'Objet peut être déclaré avec Path comme origine."
+          
+        - name: format
+          in: query
+          required: true
+          description: "Format de réponse souhaité. Valeurs possibles : `xml` ou `json`."
+          schema:
+            $ref: "#/components/schemas/FormatEnum"
+            
+        - name: hierarchy
+          in: query
+          required: false
+          schema:
+            type: string
+          description: "Code des différentes hiérarchies organisations."
+
+        - name: orga_min
+          in: query
+          required: false
+          schema:
+            type: integer
+          description: "Niveau d'organisation minimum voulu."
+
+        - name: orga_max
+          in: query
+          required: false
+          schema:
+            type: integer
+          description: "Niveau d'organisation maximum voulu."
+
+        - name: render
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [indented, treeview]
+            default: indented
+          description: "Mode d'affichage : 'default' ou 'treeview'. La valeur par défaut est 'indented'."
+
+        - name: language
+          in: query
+          required: false
+          schema:
+            type: string
+          description: "Langue désirée (code alpha-1 issu de l'ISO 639-1)."
+
+      security:
+        - apikeyAuth: []
+
+      responses:
+        "200":
+          description: Organisation spécifique.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/OrgaTreeResponse"
+                  - $ref: "#/components/schemas/OrgaDefaultResponse"
+
+  /api.aspx/v1.0/buy/commodities:
+    get:
+      tags:
+        - API Famille
+      summary: Récupération des familles (sans object_id)
+      parameters:
+      
+        - name: format
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [xml, json]
+            description: "Format de réponse souhaité. Valeurs possibles : `xml` ou `json`."
+            
+        - name: hierarchy
+          in: query
+          required: false
+          schema:
+            type: string
+          description: "Code des différentes hiérarchies familles."
+
+        - name: fam_min
+          in: query
+          required: false
+          schema:
+            type: integer
+          description: "Niveau famille minimum voulu."
+
+        - name: fam_max
+          in: query
+          required: false
+          schema:
+            type: integer
+          description: "Niveau famille maximum voulu."
+
+        - name: render
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [indented, treeview]
+            default: indented
+          description: "Mode d'affichage : 'default' ou 'treeview'. La valeur par défaut est 'indented'."
+
+        - name: language
+          in: query
+          required: false
+          schema:
+            type: string
+          description: "Langue désirée (code alpha-1 issu de l'ISO 639-1)."
+
+      security:
+        - apikeyAuth: []
+
+      responses:
+        "200":
+          description: Liste des familles.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/FamTreeResponse"
+                  - $ref: "#/components/schemas/FamDefaultResponse"
+  /api.aspx/v1.0/buy/commodities/{object_id}:
+    get:
+      tags:
+        - API Famille
+      summary: Récupération d'une famille spécifique (avec object_id)
+      parameters:
+        - name: object_id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: "Un ID d'Objet peut être déclaré avec Path comme origine."
+
+        - name: format
+          in: query
+          required: true
+          description: "Format de réponse souhaité. Valeurs possibles : `xml` ou `json`."
+          schema:
+            $ref: "#/components/schemas/FormatEnum"
+            
+        - name: hierarchy
+          in: query
+          required: false
+          schema:
+            type: string
+          description: "Code des différentes hiérarchies familles."
+
+        - name: fam_min
+          in: query
+          required: false
+          schema:
+            type: integer
+          description: "Niveau famille minimum voulu."
+
+        - name: fam_max
+          in: query
+          required: false
+          schema:
+            type: integer
+          description: "Niveau famille maximum voulu."
+
+        - name: render
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [indented, treeview]
+            default: indented
+          description: "Mode d'affichage : 'default' ou 'treeview'. La valeur par défaut est 'indented'."
+
+        - name: language
+          in: query
+          required: false
+          schema:
+            type: string
+          description: "Langue désirée (code alpha-1 issu de l'ISO 639-1)."
+
+      security:
+        - apikeyAuth: []
+
+      responses:
+        "200":
+          description: Famille spécifique.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/FamTreeResponse"
+                  - $ref: "#/components/schemas/FamDefaultResponse"
+
+  /api.aspx/v1.0/ctr/contract:
+    get:
+      tags:
+        - API Contrats
+      summary: Récupération des contrats
+      description:
+        Récupère la liste des contrats en mode `full` (tous les contrats) ou `diff` (contrats modifiés selon critères).
+        Le format de réponse peut être `xml` ou `json`.
+      parameters:
+        - name: format
+          in: query
+          required: true
+          description: "Format de réponse souhaité. Valeurs possibles : `xml` ou `json`."
+          schema:
+            $ref: "#/components/schemas/FormatEnum"
+
+        - name: mode
+          in: query
+          required: true
+          description: "Mode de récupération des contrats. Valeurs possibles: `full` ou `diff`."
+          schema:
+            $ref: "#/components/schemas/ModeEnum"
+            
+        - name: ctr_id
+          in: query
+          required: false
+          description: Identifiant du contrat (mode diff uniquement)
+          schema:
+            type: integer
+        - name: ctr_ref
+          in: query
+          required: false
+          description: Référence du contrat (mode diff uniquement)
+          schema:
+            type: string
+        - name: ctr_code
+          in: query
+          required: false
+          description: Code du contrat (mode diff uniquement)
+          schema:
+            type: string
+        - name: tiers_code
+          in: query
+          required: false
+          description: Identitfiant national du fournisseur (mode diff uniquement)
+          schema:
+            type: string
+        - name: date_from
+          in: query
+          required: false
+          description: Date de début pour filtrer les contrats (mode diff uniquement)
+          schema:
+            type: string
+            format: date
+        - name: date_to
+          in: query
+          required: false
+          description: Date de fin pour filtrer les contrats (mode diff uniquement)
+          schema:
+            type: string
+            format: date
+      responses:
+        "200":
+          description: Liste des contrats récupérée avec succès
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/ContractsResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContractsResponse"
+        "400":
+          description: Erreur de validation des paramètres d'entrée
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContractsErrorResponse"
+  /api.aspx/v1.0/ctr/contract/{object_id}:
+    get:
+      tags:
+        - API Contrats
+      summary: Récupération des contrats
+      description:
+        Récupère la liste des contrats en mode `full` (tous les contrats) ou `diff` (contrats modifiés selon critères).
+        Le format de réponse peut être `xml` ou `json`.
+      parameters:
+        - name: object_id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: "Un ID d'Objet peut être déclaré avec Path comme origine."
+          
+        - name: format
+          in: query
+          required: true
+          description: "Format de réponse souhaité. Valeurs possibles : `xml` ou `json`."
+          schema:
+            $ref: "#/components/schemas/FormatEnum"
+
+        - name: mode
+          in: query
+          required: true
+          description: "Mode de récupération des contrats. Valeurs possibles: `full` ou `diff`."
+          schema:
+            $ref: "#/components/schemas/ModeEnum"
+            
+        - name: ctr_id
+          in: query
+          required: false
+          description: Identifiant du contrat (mode diff uniquement)
+          schema:
+            type: integer
+            
+        - name: ctr_ref
+          in: query
+          required: false
+          description: Référence du contrat (mode diff uniquement)
+          schema:
+            type: string
+            
+        - name: ctr_code
+          in: query
+          required: false
+          description: Code du contrat (mode diff uniquement)
+          schema:
+            type: string
+            
+        - name: tiers_code
+          in: query
+          required: false
+          description: Code fournisseur (mode diff uniquement)
+          schema:
+            type: string
+            
+        - name: date_from
+          in: query
+          required: false
+          description: Date de début pour filtrer les contrats (mode diff uniquement)
+          schema:
+            type: string
+            format: date
+            
+        - name: date_to
+          in: query
+          required: false
+          description: Date de fin pour filtrer les contrats (mode diff uniquement)
+          schema:
+            type: string
+            format: date
+      responses:
+        "200":
+          description: Liste des contrats récupérée avec succès
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/ContractsResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContractsResponse"
+        "400":
+          description: Erreur de validation des paramètres d'entrée
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContractsErrorResponse"
+
+  /api.aspx/v1.0/ord/orders:
+    get:
+      tags:
+        - API Commandes
+      summary: Récupération des commandes
+      description:
+        Récupère la liste des commandes en mode `full` (tous les Commandes) ou `diff` (commandes modifiés selon critères).
+        Le format de réponse peut être `xml` ou `json`.
+      parameters:
+        - name: format
+          in: query
+          required: true
+          description: "Format de réponse souhaité. Valeurs possibles : `xml` ou `json`."
+          schema:
+            $ref: "#/components/schemas/FormatEnum"
+
+        - name: mode
+          in: query
+          required: true
+          description: "Mode de récupération des commandes. Valeurs possibles: `full` ou `diff`."
+          schema:
+            $ref: "#/components/schemas/ModeEnum"
+            
+        - name: ord_id
+          in: query
+          required: false
+          description: Identifiant de la commande (mode diff uniquement, plusieurs commandes possibles séparées par des virgules)
+          schema:
+            type: string
+            
+        - name: sup_id
+          in: query
+          required: false
+          description: Référence du fournisseur (mode diff uniquement, plusieurs fournisseurs possibles séparées par des virgules)
+          schema:
+            type: string
+            
+        - name: tiers_code
+          in: query
+          required: false
+          description: Identitfiant national du fournisseur (mode diff uniquement)
+          schema:
+            type: string
+            
+        - name: date_from
+          in: query
+          required: false
+          description: Date de début pour filtrer les Commandes (mode diff uniquement)
+          schema:
+            type: string
+            format: date
+            
+        - name: date_to
+          in: query
+          required: false
+          description: Date de fin pour filtrer les Commandes (mode diff uniquement)
+          schema:
+            type: string
+            format: date
+            
+      responses:
+        "200":
+          description: Liste des Commandes récupérée avec succès
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/OrdersResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrdersResponse"
+        "400":
+          description: Erreur de validation des paramètres d'entrée
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrdersErrorResponse"
+  /api.aspx/v1.0/ord/orders/{object_id}:
+    get:
+      tags:
+        - API Commandes
+      summary: Récupération des Commandes
+      description:
+        Récupère la liste des Commandes en mode `full` (tous les Commandes) ou `diff` (Commandes modifiés selon critères).
+        Le format de réponse peut être `xml` ou `json`.
+      parameters:
+        - name: object_id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: "Un ID d'Objet peut être déclaré avec Path comme origine."
+          
+        - name: format
+          in: query
+          required: true
+          description: "Format de réponse souhaité. Valeurs possibles : `xml` ou `json`."
+          schema:
+            $ref: "#/components/schemas/FormatEnum"
+            
+        - name: mode
+          in: query
+          required: true
+          description: "Mode de récupération des commandes. Valeurs possibles: `full` ou `diff`."
+          schema:
+            $ref: "#/components/schemas/ModeEnum"
+            
+        - name: ord_id
+          in: query
+          required: false
+          description: Identifiant de la commande (mode diff uniquement, plusieurs commandes possibles séparées par des virgules)
+          schema:
+            type: integer
+            
+        - name: sup_id
+          in: query
+          required: false
+          description: Référence du fournisseur (mode diff uniquement, plusieurs fournisseurs possibles séparées par des virgules)
+          schema:
+            type: string
+            
+        - name: ctr_code
+          in: query
+          required: false
+          description: Code du contrat (mode diff uniquement)
+          schema:
+            type: string
+            
+        - name: tiers_code
+          in: query
+          required: false
+          description: Code fournisseur (mode diff uniquement)
+          schema:
+            type: string
+            
+        - name: date_from
+          in: query
+          required: false
+          description: Date de début pour filtrer les Commandes (mode diff uniquement)
+          schema:
+            type: string
+            format: date
+            
+        - name: date_to
+          in: query
+          required: false
+          description: Date de fin pour filtrer les Commandes (mode diff uniquement)
+          schema:
+            type: string
+            format: date
+            
+      responses:
+        "200":
+          description: Liste des Commandes récupérée avec succès
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/OrdersResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrdersResponse"
+        "400":
+          description: Erreur de validation des paramètres d'entrée
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrdersErrorResponse"
+                
+  /api.aspx/v1.0/inv/invoices:
+    get:
+      tags:
+        - API Factures (GET)
+      summary: Récupérer une ou plusieurs factures
+      description: Permet de filtrer et récupérer les factures selon certains critères.
+      parameters:
+        - in: query
+          name: invoiceRef
+          schema:
+            type: string
+          description: Référence de la facture
+      responses:
+        '200':
+          description: Liste des factures
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/InvoiceRequest'
+    post:
+      tags: 
+        - API Factures (POST)
+      summary: Créer une ou plusieurs factures
+      description: Permet de soumettre une ou plusieurs factures pour traitement.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                invoices:
+                  type: array
+                  maxItems: 1
+                  minItems: 1
+                  description: |
+                    Tableau contenant une seule facture à soumettre.
+                    Un seul objet `invoice` est accepté par requête.
+                  items:
+                    $ref: '#/components/schemas/InvoicePostRequest'
+      responses:
+        '200':
+          description: Réponse après soumission
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/InvoiceSuccessResponse'
+                  - $ref: '#/components/schemas/InvoiceErrorResponse'
+                  
+  /api.aspx/v1.0/org/programs:
+    get:
+      tags:
+        - API Programmes
+      summary: Récupération des programmes
+      description: Retourne la liste des programmes avec détails organisationnels.
+      parameters:
+        - name: format
+          in: query
+          required: true
+          description: "Format de réponse souhaité. Une seule valeur possible : `json`."
+          schema:
+            type: string
+            enum: [json]
+      security:
+        - apikeyAuth: []
+      responses:
+        "200":
+          description: Liste des programmes.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProgramsResponse'
+                
+  # Authentification
+  /oauth2/token:
+    post:
+      tags:
+        - Authentification
+      summary: Génération d'un token OAuth2 avec client_credentials
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                client_id:
+                  type: string
+                  example: "09df41fe-fe66-488c-94c5-1d03a7828466"
+                client_secret:
+                  type: string
+                  example: "bd753631be62f092c4ae5c32a2ff45d716077a893503b394fad453247f396f79"
+                grant_type:
+                  type: string
+                  example: client_credentials
+                scope:
+                  type: string
+                  example: auth_api_api_endpoint_exec
+      security:
+        - oauth2: []
+      responses:
+        "200":
+          description: Token généré avec succès
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OAuthTokenResponse"
+
+components:
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://env21.ivalua.app/buyer/actionlogement/sandboxmaint/rvr4t/oauth2/token
+          scopes:
+            auth_api_api_endpoint_exec: "Accès aux API de l'exécution"
+    apikeyAuth:
+      type: apiKey
+      in: header
+      name: apikey
+    apikeyAuthQuery:
+      type: apiKey
+      in: query
+      name: apikey
+
+  schemas:
+    FormatEnum:
+      type: string
+      enum: [json, xml]
+      description: "Format des données. Valeurs possibles : `json` ou `xml`."
+
+    ModeEnum:
+      type: string
+      enum: [full, diff]
+      description: "Mode de récupération. Valeurs possibles : `full` ou `diff`."
+      
+    # API Fournisseur
+    SuppliersResponse:
+      type: object
+      properties:
+        header:
+          type: object
+          description: "Informations générales sur la réponse"
+          properties:
+            apiName:
+              type: string
+              example: "suppliers"
+            format:
+              type: string
+              example: "json"
+              description: "Format des données retournées"
+            totalRow:
+              type: integer
+              example: 1
+              description: "Nombre total de données retournés"
+        suppliers:
+          type: array
+          description: "Liste des fournisseurs"
+          items:
+            type: object
+            properties:
+              dataSupplier:
+                type: object
+                description: "Données d'identité du fournisseur"
+                required: [id, objectId, ctrCode]
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                    description: "Identifiant unique du fournisseur"
+                  objectId:
+                    type: integer
+                    example: 1
+                    description: "Identique à l'id"
+                  code:
+                    type: string
+                    example: "SUP000001"
+                    description: "Code interne Ivalua du fournisseur"
+                  erpCode:
+                    type: string
+                    example: ""
+                    description: "Code extene IKOS du fournisseur"
+                  supplierName:
+                    type: string
+                    example: "LYSINT"
+                  physicalPerson:
+                    type: boolean
+                    example: false
+                  title:
+                    type: string
+                    example: "M."
+                    description: "Titre (renseigné uniquement si physicalPerson = 1)"
+                  firstName:
+                    type: string
+                    example: "Jean"
+                    description: "Prénom (renseigné uniquement si physicalPerson = 1)"
+                  lastName:
+                    type: string
+                    example: "Dupont"
+                    description: "Nom (renseigné uniquement si physicalPerson = 1)"
+                  legalName:
+                    type: string
+                    example: "LYSINT"
+                  website:
+                    type: string
+                    example: "http://www.lysint.eu"
+                  natIdType:
+                    type: string
+                    example: "01"
+                    description: >
+                      Type d'identifiant national. Valeurs possibles :
+                      `01` : SIRET, `05` : TVA, `06` : HORS UE, `07` : TAHITI, `08` : RIDET,
+                      `09` : FOURNISSEUR FRANÇAIS SANS SIRET, `10` : FRWF, `11` : IREP
+                    enum: ["01", "05", "06", "07", "08", "09", "10", "11"]
+                  natId:
+                    type: string
+                    example: "88129151200013"
+                    description: "Identifiant national"
+                  typeIKOStiersCode:
+                    type: string
+                    enum: ["FRS", "IBE", "SYN"]
+                    example: "FRS"
+                    description: >
+                      Code du type de tiers IKOS. Valeurs possibles :
+                      `FRS` : Fournisseur, `IBE` : Syndicat de copropriété SEQENS, `SYN` : Syndicat de copropriété
+                  typeIKOStiersLabel:
+                    type: string
+                    enum: ["Fournisseur", "Syndicat de copropriété SEQENS", "Syndicat de copropriété"]
+                    example: "Fournisseur"
+                    description: >
+                      Libellé du type de tiers IKOS correspondant au code.
+                  siret:
+                    type: string
+                    example: "88129151200013"
+                  siren:
+                    type: string
+                    example: "881291512"
+                  duns:
+                    type: string
+                    example: ""
+                  tvaIntracom:
+                    type: string
+                    example: "FR62881291512"
+                  apeNaf:
+                    type: string
+                    example: "62.01Z"
+                    description: "Code APE/NAF"
+                  creationYear:
+                    type: string
+                    example: "2020"
+                  creationSystemDate:
+                    type: string
+                    format: date
+                    example: "2024-02-28"
+                  modificationSystemDate:
+                    type: string
+                    format: date
+                    example: "2025-03-04"
+                    nullable: true
+                  deletedSystemDate:
+                    type: string
+                    example: ""
+                    nullable: true
+                  latestModificationDate:
+                    type: string
+                    format: date
+                    example: "2025-03-04"
+                    nullable: true
+                  status:
+                    type: string
+                    example: "ini"
+                  legalCode:
+                    type: string
+                    example: ""
+                  legalStructure:
+                    type: string
+                    example: ""
+              address:
+                type: object
+                properties:
+                  adr1:
+                    type: string
+                    example: "FR"
+                  adr2:
+                    type: string
+                    example: "25 Rue des Renaudes"
+                  adr3:
+                    type: string
+                    example: ""
+                  zip:
+                    type: string
+                    example: "75017"
+                  city:
+                    type: string
+                    example: "Paris"
+              bankingInformations:
+                type: array
+                description: "Informations bancaires du fournisseur"
+                items:
+                  type: object
+                  required:
+                    - iban
+                    - countryCode
+                    - bankLabel
+                  properties:
+                    id:
+                      type: integer
+                      example: 529
+                      description: "Identifiant unique de la ligne bancaire"
+                    internationalPayId:
+                      type: string
+                      example: "FR76"
+                      description: "Identifiant international de paiement"
+                    accountNumber:
+                      type: string
+                      example: "00020419401"
+                      description: "Numéro de compte"
+                    bankCode:
+                      type: string
+                      example: "10278"
+                      description: "Code banque"
+                    counterCode:
+                      type: string
+                      example: "02131"
+                      description: "Code guichet"
+                    ribKey:
+                      type: string
+                      example: "26"
+                      description: "Clé RIB"
+                    bban:
+                      type: string
+                      example: "10278021310002041940126"
+                      description: "BBAN (Basic Bank Account Number)"
+                    iban:
+                      type: string
+                      example: "FR7610278021310002041940126"
+                      description: "IBAN (International Bank Account Number)"
+                    bic:
+                      type: string
+                      example: "CMCIFR2A"
+                      description: "BIC (Bank Identifier Code)"
+                      nullable: true
+                    countryCode:
+                      type: string
+                      example: "FR"
+                      description: "Code pays de la banque"
+                    bankLabel:
+                      type: string
+                      example: "CSSE CIT MUT FALAISE"
+                      description: "Libellé de la banque"
+                    creationAccountDate:
+                      type: string
+                      format: date
+                      example: "2025-03-20"
+                      description: "Date de création de l'information bancaire"
+                    modificationAcountDate:
+                      type: string
+                      format: date
+                      example: "2025-03-20"
+                      description: "Date de dernière modification"
+              contacts:
+                type: array
+                description: "Liste des contacts associés au fournisseur"
+                items:
+                  oneOf:
+                    - description: "Contact interne"
+                      type: object
+                      required: [internal, firstName, lastName, email, login]
+                      properties:
+                        internal:
+                          type: integer
+                          enum: [1]
+                          example: 1
+                          description: "Contact interne (1)"
+                        firstName:
+                          type: string
+                          example: "Kévin"
+                        lastName:
+                          type: string
+                          example: "Garrec (Lysint)"
+                        email:
+                          type: string
+                          format: email
+                          example: "kevin.garrec@lysint.eu"
+                        login:
+                          type: string
+                          example: "kevin.garrec@lysint.eu"
+                        profiles:
+                          type: array
+                          description: "Profils"
+                          items:
+                            type: object
+                            required: [code, label]
+                            properties:
+                              code:
+                                type: string
+                                example: "sup_owner"
+                              label:
+                                type: string
+                                example: "Responsable (Fournisseur)"
+              
+                    - description: "Contact externe"
+                      type: object
+                      required: [internal, firstName, lastName, email, login]
+                      properties:
+                        internal:
+                          type: integer
+                          enum: [0]
+                          example: 0
+                          description: "Contact externe (0)"
+                        firstName:
+                          type: string
+                          example: "OUEST"
+                        lastName:
+                          type: string
+                          example: "CASS"
+                        email:
+                          type: string
+                          format: email
+                          example: "test@test.fr"
+                        login:
+                          type: string
+                          example: ""
+                        roles:
+                          type: array
+                          description: "Rôles"
+                          items:
+                            type: object
+                            required: [code, label]
+                            properties:
+                              code:
+                                type: string
+                                example: "sup_owner"
+                              label:
+                                type: string
+                                example: "Responsable (Fournisseur)"
+              partners:
+                type: array
+                description: "Liste des rattachements organisationnels du fournisseur"
+                items:
+                  type: object
+                  required: [orgaLevel, orgaNode, numPart, status]
+                  properties:
+                    orgaLevel:
+                      type: string
+                      example: "act"
+                      description: "Niveau d'organisation (ex: activité)"
+                    orgaNode:
+                      type: string
+                      example: "BRE"
+                      description: "Code du nœud organisationnel"
+                    numPart:
+                      type: integer
+                      example: 3
+                      description: "Nombre de rattachements"
+                    status:
+                      type: string
+                      enum: ["val", "del"]
+                      example: "val"
+                      description: |
+                        Statut du rattachement :
+                        - `val` : validé
+                        - `del` : supprimé
+              roles:
+                type: array
+                description: "Rôles associés au fournisseur"
+                items:
+                  type: object
+                  required: [orgaLevel, orgaNode, roleCode, status]
+                  properties:
+                    orgaLevel:
+                      type: string
+                      example: "act"
+                      description: "Niveau d'organisation"
+                    orgaNode:
+                      type: string
+                      example: "ART"
+                      description: "Identifiant du nœud d'organisation"
+                    roleCode:
+                      type: string
+                      example: "FRN"
+                      description: "Code du rôle"
+                    roleLabel:
+                      type: string
+                      example: "Fournisseur"
+                      description: "Libellé du rôle"
+                    beginDate:
+                      type: string
+                      format: date
+                      example: "2025-10-10"
+                      description: "Date de début du rôle"
+                    endDate:
+                      type: string
+                      format: date
+                      example: "2025-10-10"
+                      description: "Date de fin du rôle"
+                    status:
+                      type: string
+                      enum: ["val", "del"]
+                      example: "val"
+                      description: |
+                        Statut du rattachement :
+                        - `val` : validé
+                        - `del` : supprimé
+    SuppliersErrorResponse:
+      type: object
+      properties:
+        erreurs:
+          type: array
+          items:
+            type: object
+            properties:
+              code:
+                type: string
+                example: "ERR-QUE-001"
+              message:
+                type: string
+                example: "Le mode doit être renseigné."
+      example:
+        erreurs:
+          - code: "ERR-QUE-001"
+            message: "Le mode doit être renseigné."
+          - code: "ERR-QUE-002"
+            message: "Le mode doit être soit 'full', soit 'diff'."
+          - code: "ERR-QUE-003"
+            message: "Le format spécifié doit être 'json' ou 'xml'."
+          - code: "ERR-QUE-004"
+            message: "Erreur : Au moins un paramètre doit être fourni."
+          - code: "ERR-QUE-005"
+            message: "Une date (date_from ou date_to) est manquante."
+          - code: "ERR-QUE-006"
+            message: "Le paramètre date_from doit être inférieur à date_to."
+          - code: "ERR-QUE-007"
+            message: "L’intervalle entre date_from et date_to ne peut pas dépasser 2 mois."
+
+    # API Utilisateurs
+    UsersResponse:
+      type: object
+      properties:
+        header:
+          type: object
+          description: "Informations générales sur la réponse"
+          properties:
+            apiName:
+              type: string
+              example: "users"
+            format:
+              type: string
+              example: "json"
+              description: "Format des données retournées"
+            totalRow:
+              type: integer
+              example: 1
+              description: "Nombre total de données retournés"
+        users:
+          type: array
+          items:
+            type: object
+            properties:
+              dataUser:
+                type: object
+                properties:
+                  matricule:
+                    type: string
+                    description: "Matricule de l'utilisateur."
+                  firstName:
+                    type: string
+                    example: "Clarity"
+                    description: "Prénom de l'utilisateur."
+                  lastName:
+                    type: string
+                    example: "Admin"
+                    description: "Nom de famille de l'utilisateur."
+                  email:
+                    type: string
+                    example: "no-reply@clarity-demo.com"
+                    description: "Adresse email de l'utilisateur."
+                  login:
+                    type: string
+                    example: "root"
+                    description: "Nom de connexion de l'utilisateur. Correspond au paramètre d'entrée 'login_name'."
+                  phoneNumber:
+                    type: string
+                    description: "Téléphone professionnel de l'utilisateur."
+                  homePhoneNumber:
+                    type: string
+                    description: "Téléphone personnel de l'utilisateur."
+                  cellNumber:
+                    type: string
+                    description: "Téléphone portable de l'utilisateur."
+                  loginNameCreated:
+                    type: string
+                    description: "Nom de connexion de l'utilisateur ayant créé le compte (nullable)."
+                  loginNameModified:
+                    type: string
+                    example: "kgarrec"
+                    nullable: true
+                    description: "Nom de connexion de l'utilisateur ayant modifié le compte (nullable)."
+                  language:
+                    type: string
+                    example: "en"
+                    description: "Langue du compte utilisateur."
+                  status:
+                    type: string
+                    enum: ["val", "del"]
+                    example: "val"
+                    description: |
+                      Statut du compte utilisateur :
+                      - `val` : validé
+                      - `del` : supprimé
+                  creationDate:
+                    type: string
+                    format: date
+                    example: "2004-09-23"
+                    description: "Date de création du compte."
+                  modificationDate:
+                    type: string
+                    format: date
+                    example: "2021-07-08"
+                    nullable: true
+                    description: "Date de dernière modification du compte (nullable)."
+                  deletedDate:
+                    type: string
+                    format: date
+                    nullable: true
+                    description: "Date de suppression du compte (nullable)."
+                  lastConnexionDate:
+                    type: string
+                    format: date
+                    nullable: true
+                    description: "Date de dernière connexion de l'utilisateur (nullable)."
+                  latestModificationDate:
+                    type: string
+                    format: date
+                    example: "2021-07-08"
+                    nullable: true
+                    description: "Date de dernière modification du compte ou de ses informations principales (nullable)."
+              profils:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    profilLabel:
+                      type: string
+                    profilCode:
+                      type: string
+              organizations:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    orgaNode:
+                      type: string
+                      example: "ADL"
+                    orgaLevel:
+                      type: string
+                      example: "act"
+                    orgaLabel:
+                      type: string
+                      example: "Adlis"
+                    orgaID:
+                      type: integer
+                      example: 176
+                    status:
+                      type: string
+                      enum: ["val", "del"]
+                      example: "val"
+                      description: |
+                        Statut de l'organisation :
+                        - `val` : validé
+                        - `del` : supprimé
+              families:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    famNode:
+                      type: string
+                      example: 1
+                    famLevel:
+                      type: string
+                      example: "dom"
+                    famLabel:
+                      type: string
+                      example: "Dépenses courantes"
+                    famId:
+                      type: integer
+                      example: 320
+                    code:
+                      type: string
+                      example: "DPAA01"
+                      description: "Code famille SEQENS"
+                    status:
+                      type: string
+                      enum: ["val", "del"]
+                      example: "val"
+                      description: |
+                        Statut :
+                        - `val` : validé
+                        - `del` : supprimé
+    UsersErrorResponse:
+      type: object
+      properties:
+        erreurs:
+          type: array
+          items:
+            type: object
+            properties:
+              code:
+                type: string
+                example: "ERR-QUE-001"
+              message:
+                type: string
+                example: "Le mode doit être renseigné."
+      example:
+        erreurs:
+          - code: "ERR-QUE-101"
+            message: "Le mode doit être renseigné."
+          - code: "ERR-QUE-102"
+            message: "Le mode doit être soit 'full', soit 'diff'."
+          - code: "ERR-QUE-103"
+            message: "Le format spécifié doit être 'json' , 'xml' ou 'scim'."
+          - code: "ERR-QUE-104"
+            message: "Erreur : Au moins un paramètre doit être fourni."
+          - code: "ERR-QUE-105"
+            message: "Une date (date_from ou date_to) est manquante."
+          - code: "ERR-QUE-106"
+            message: "Le paramètre date_from doit être inférieur à date_to."
+          - code: "ERR-QUE-107"
+            message: "L’intervalle entre date_from et date_to ne peut pas dépasser 2 mois."
+
+    # API Organisation
+    OrgaTreeResponse:
+      type: object
+      xml:
+        name: organizations
+      properties:
+        header:
+          type: object
+          properties:
+            apiName:
+              type: string
+              example: "organizations"
+            format:
+              type: string
+              example: "json"
+            method:
+              type: string
+              example: "get"
+        organizations:
+          type: array
+          xml:
+            name: organization
+            wrapped: true
+          items:
+            type: object
+            xml:
+              name: orga
+            properties:
+              orgaNode:
+                type: string
+                example: "SEQ"
+              orgaLevel:
+                type: string
+                example: "grp"
+              orgaLabel:
+                type: string
+                example: "SEQENS"
+              orgaID:
+                type: integer
+                example: 172
+              status:
+                type: string
+                enum: ["val", "del"]
+                example: "val"
+                description: |
+                  Statut :
+                  - `val` : validé
+                  - `del` : supprimé
+              child:
+                type: array
+                items:
+                  $ref: "#/components/schemas/OrgaTreeResponse"
+    OrgaDefaultResponse:
+      properties:
+        header:
+          type: object
+          properties:
+            apiName:
+              type: string
+              example: "organizations"
+            format:
+              type: string
+              example: "json"
+            method:
+              type: string
+              example: "get"
+        organizations:
+          type: array
+          items:
+            type: object
+            properties:
+              orgaNode:
+                type: string
+                example: "ADL"
+              orgaLevel:
+                type: string
+                example: "act"
+              orgaLabel:
+                type: string
+                example: "Adlis"
+              orgaID:
+                type: integer
+                example: 176
+              status:
+                type: string
+                enum: ["val", "del"]
+                example: "val"
+                description: |
+                  Statut du rattachement :
+                  - `val` : validé
+                  - `del` : supprimé
+
+    # API Familles
+    FamTreeResponse:
+      type: object
+      properties:
+        header:
+          type: object
+          properties:
+            apiName:
+              type: string
+              example: "commodities"
+            format:
+              type: string
+              example: "json"
+            method:
+              type: string
+              example: "get"
+        commodities:
+          type: array
+          items:
+            type: object
+            properties:
+              famNode:
+                type: string
+                example: "1"
+              famLevel:
+                type: string
+                example: "dom"
+              famLabel:
+                type: string
+                example: "Dépenses courantes"
+              famId:
+                type: integer
+                example: 320
+              code:
+                type: string
+                example: "DPAA01"
+                description: "Code famille SEQENS"
+              status:
+                type: string
+                enum: ["val", "del"]
+                example: "val"
+                description: |
+                  Statut :
+                  - `val` : validé
+                  - `del` : supprimé
+              child:
+                type: array
+                items:
+                  $ref: "#/components/schemas/FamTreeResponse"
+    FamDefaultResponse:
+      properties:
+        header:
+          type: object
+          properties:
+            apiName:
+              type: string
+              example: "commodities"
+            format:
+              type: string
+              example: "json"
+            method:
+              type: string
+              example: "get"
+        commodities:
+          type: array
+          items:
+            type: object
+            properties:
+              famNode:
+                type: string
+                example: 1
+              famLevel:
+                type: string
+                example: "dom"
+              famLabel:
+                type: string
+                example: "Dépenses courantes"
+              famId:
+                type: integer
+                example: 320
+              code:
+                type: string
+                example: "DPAA01"
+                description: "Code famille SEQENS"
+              status:
+                type: string
+                enum: ["val", "del"]
+                example: "val"
+                description: |
+                  Statut :
+                  - `val` : validé
+                  - `del` : supprimé
+
+    # API TEST
+    ApiTestObject:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "1"
+        name:
+          type: string
+          example: "TEST1"
+    ApiMetadata:
+      type: object
+      properties:
+        format:
+          type: string
+          example: "json"
+        totalRecords:
+          type: string
+          example: "7"
+    ApiTestResponse:
+      type: object
+      properties:
+        response:
+          type: object
+          properties:
+            metadata:
+              $ref: "#/components/schemas/ApiMetadata"
+            tests:
+              type: object
+              properties:
+                test:
+                  type: array
+                  items:
+                    $ref: "#/components/schemas/ApiTestObject"
+    ApiTestRequest:
+      type: object
+      properties:
+        tests:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                example: "TEST2"
+
+    # Réponse OAuth2
+    OAuthTokenResponse:
+      type: object
+      properties:
+        access_token:
+          type: string
+          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        token_type:
+          type: string
+          example: "bearer"
+        expires_in:
+          type: integer
+          example: 3600
+    
+    # API Contrats
+    ContractsResponse:
+      type: object
+      properties:
+        header:
+          type: object
+          description: "Réponse contenant la liste des contrats."
+          properties:
+            apiName:
+              type: string
+              example: "Contracts"
+            format:
+              type: string
+              example: "json"
+              description: "Format de réponse."
+            totalRow:
+              type: integer
+              example: 5
+              description: "Nombre total d'éléments retournés."
+        contracts:
+          type: array
+          description: "Liste des contrats récupérés."
+          items:
+            type: object
+            properties:
+              dataContract:
+                type: object
+                description: "Informations principales du contrat."
+                properties:
+                  id:
+                    type: integer
+                    example: 5
+                    description: "Identifiant interne."
+                  objectId:
+                    type: integer
+                    example: 5
+                    description: "Identifiant de l'objet métier."
+                  ctrIdOrigin:
+                    type: integer
+                    example: 1
+                    description: "Identifiant du contrat d'origine."
+                  ctrCode:
+                    type: string
+                    example: "CTR000005"
+                    description: "Code unique du contrat."
+                  ctrIdFrame:
+                    type: string
+                    example: "1"
+                    description: "Identifiant du contrat-cadre associé."
+                  ctrIdParent:
+                    type: string
+                    example: "1"
+                    description: "Identifiant du contrat parent."
+                  ctrLabel:
+                    type: string
+                    example: "Test Contract"
+                    description: "Libellé du contrat."
+                  ctrRef:
+                    type: string
+                    example: "TST123"
+                    description: "Référence interne du contrat."
+                  ctrType:
+                    type: string
+                    example: "master_mix"
+                    enum:
+                      - "das"
+                      - "master_mix"
+                      - "master_po"
+                      - "master_res"
+                      - "res"
+                      - "spe"
+                      - "umbrella"
+                      - "work"
+                    description: "Type du contrat."
+                    x-enum-descriptions:
+                      das: "Système d'acquisition dynamique"
+                      master_mix: "Accord cadre avec marché subséquent ou mixte"
+                      master_po: "Accord-cadre à bons de commande"
+                      master_res: "Accord-cadre à marchés subséquents"
+                      res: "Marché subséquent"
+                      spe: "Marché spécifique"
+                      umbrella: "Marché Chapeau"
+                      work: "Contrat Marché de travaux"
+                  typeProcedureCode:
+                    type: string
+                    description: "Code du type de procédure."
+                    enum:
+                      - AOO
+                      - AR
+                      - AU
+                      - CO
+                      - DC
+                      - GAG
+                      - MAPA
+                      - PCN
+                      - PN
+                      - SAD
+                    x-enum-descriptions:
+                      AOO: "Appel d'offres ouvert"
+                      AR: "Appel d'offres restreint"
+                      AU: "Autre"
+                      CO: "Concours"
+                      DC: "Dialogue compétitif"
+                      GAG: "Gré à Gré"
+                      MAPA: "Marché à procédure adaptée"
+                      PCN: "Procédure concurrentielle avec négociation"
+                      PN: "Procédure négociée"
+                      SAD: "Système d'acquisition dynamique"
+                  typeProcedureLabel:
+                    type: string
+                    description: "Libellé du type de procédure."
+                    enum:
+                      - Appel d'offres ouvert
+                      - Appel d'offres restreint
+                      - Autre
+                      - Concours
+                      - Dialogue compétitif
+                      - Gré à Gré
+                      - Marché à procédure adaptée
+                      - Procédure concurrentielle avec négociation
+                      - Procédure négociée
+                      - Système d'acquisition dynamique
+                  contractCategoryCode:
+                    type: string
+                    description: "Code de catégorie de contrat."
+                    enum:
+                      - bpu
+                      - exp
+                      - fe
+                      - trav
+                    x-enum-descriptions:
+                      bpu: "BPU Frais généraux"
+                      exp: "Exploitation"
+                      fe: "Fluides / Énergie"
+                      trav: "Travaux"
+                  contractCategoryLabel:
+                    type: string
+                    description: "Libellé de la catégorie de contrat."
+                    enum:
+                      - BPU Frais généraux
+                      - Exploitation
+                      - Fluides / Énergie
+                      - Travaux
+                  ctrSupId:
+                    type: string
+                    example: "4"
+                    description: "Identifiant du fournisseur."
+                  ctrSupCode:
+                    type: string
+                    example: "SUP000001"
+                    description: |
+                      Code fournisseur interne (Ivalua code ex: SUP000001).
+                  ctrSupName:
+                    type: string
+                    example: "LYSINT"
+                    description: "Nom du fournisseur."
+                  ctrSupNatId:
+                    type: string
+                    example: "4520234443046"
+                    description: "Identifiant national du fournisseur."
+                  ctrSupNatIdType:
+                    type: string
+                    example: "SIRET"
+                    description: "Type d'identifiant national (ex: SIRET)."
+                  iban:
+                    type: string
+                    example: "FR7610278021310002041940126"
+                    description: "IBAN du fournisseur (titulaire principal) du contrat."
+                  groupingTypeCode:
+                    type: string
+                    description: "Code du type de regroupement (lié au fournisseur principal du contrat)."
+                    enum:
+                      - GC
+                      - GS
+                      - NG
+                    x-enum-descriptions:
+                      GC: "Groupement conjoint"
+                      GS: "Groupement solidaire"
+                      NG: "Aucun groupement"
+                  groupingType:
+                    type: string
+                    description: "Libellé du type de regroupement (lié au fournisseur principal du contrat)."
+                    enum:
+                      - Groupement conjoint
+                      - Groupement solidaire
+                      - Aucun groupement
+                  paymentTypeCode:
+                    type: string
+                    example: "VIR"
+                    description: "Code du type de paiement."
+                  paymentType:
+                    type: string
+                    example: "Bank Transfer"
+                    description: "Type de paiement."
+                    enum:
+                      - "BAO"
+                      - "CB"
+                      - "CHQ"
+                      - "CRE"
+                      - "LIQ"
+                      - "TA"
+                      - "VIR"
+                    x-enum-descriptions:
+                      BAO: "Billet à ordre"
+                      CB: "Carte Bleue"
+                      CHQ: "Chèque"
+                      CRE: "Crédit"
+                      LIQ: "Liquide"
+                      TA: "Traite acceptée"
+                      VIR: "Virement bancaire"
+                  numAO:
+                    type: string
+                    example: "AO2025-001"
+                    description: "Numéro de l'appel d'offre lié."
+                  buyerSign:
+                    type: string
+                    example: "Acheteur Principal"
+                    description: "Nom de l'acheteur signataire du contrat."
+                  famId:
+                    type: integer
+                    example: 320
+                    description: "ID Famille. (Nomenclature des dépenses principales)"
+                  famCode:
+                    type: string
+                    description: "Code famille SEQENS. (Nomenclature des dépenses principales)"
+                  famLabel:
+                    type: string
+                    description: "Libellé de la famille (Nomenclature des dépenses principales)."
+                    example: "Dépenses courantes"
+                  famLevel:
+                    type: string
+                    description: "Niveau de famille. Clé primaire composite unique avec famNode. (Nomenclature des dépenses principales)"
+                    example: "dom"
+                  famNode:
+                    type: integer
+                    example: 1
+                    description: "Identifiant du noeud de famille. Clé primaire composite unique avec famLevel. (Nomenclature des dépenses principales)"
+                  orgaID:
+                    type: integer
+                    description: "ID Organisation. (Entité de gestion)"
+                  orgaLabel:
+                    type: string
+                    example: "Adlis"
+                    description: "Libellé de l'organisation. (Entité de gestion)"
+                  orgaLevel:
+                    type: string
+                    example: "act"
+                    description: "Niveau organisationnel. Clé primaire composite unique avec orgaNode. (Entité de gestion)"
+                  orgaNode:
+                    type: string
+                    example: "ADL"
+                    description: "Identifiant du noeud organisationnel. Clé primaire composite unique avec orgaLevel. (Entité de gestion)"
+                  ctrLang:
+                    type: string
+                    example: "Français"
+                    description: "Langue du contrat."
+                  ctrConfidential:
+                    type: string
+                    enum:
+                      - "Yes"
+                      - "No"
+                    example: "No"
+                    description: "Indique si le contrat est confidentiel."
+                  ctrBpmId:
+                    type: string
+                    example: "12"
+                    description: "ID associé à la consultation."
+                  ctrRiskRequired:
+                    type: string
+                    enum:
+                      - "Yes"
+                      - "No"
+                    example: "No"
+                    description: "Indique si une analyse de risques est requise."
+                  created:
+                    type: string
+                    format: date
+                    example: "2025-03-31"
+                    description: "Date de création du contrat."
+                  modified:
+                    type: string
+                    format: date
+                    example: "2025-04-09"
+                    description: "Date de modification du contrat."
+                    nullable: true
+                  loginCreated:
+                    type: string
+                    example: "JohnDoe"
+                    description: "Login de l'utilisateur ayant créé le contrat."
+                  loginModified:
+                    type: string
+                    example: "JohnDoe"
+                    description: "Login de l'utilisateur ayant modifié le contrat."
+                    nullable: true
+                  statusCode:
+                    type: string
+                    example: "val"
+                    description: "Code de statut du contrat."
+                  statusLabel:
+                    type: string
+                    example: "Signé"
+                    description: "Libellé du statut."
+                  renewalTypeCode:
+                    type: string
+                    example: "no-ren"
+                    description: "Code du type de renouvellement."
+                  renewalType:
+                    type: string
+                    example: "No Renewal"
+                    description: "Type de renouvellement."
+                  renewalPeriod:
+                    type: string
+                    example: "12"
+                    description: "Durée du renouvellement (mois)."
+                  renegociationDate:
+                    type: string
+                    format: date
+                    example: "2025-04-09"
+                    description: "Date d'étude de renouvellement."
+                  renegociationPeriod:
+                    type: string
+                    example: "3"
+                    description: "Durée d'étude de renouvellement (mois)"
+                  notificationDate:
+                    type: string
+                    format: date
+                    example: "2025-04-09"
+                    description: "Date de notification."
+                  notificationPeriod:
+                    type: string
+                    example: "2"
+                    description: "Période de préavis (mois)"
+                  maxRenewal:
+                    type: string
+                    example: "13"
+                    description: "Nombre maximal de renouvellements."
+                  duration:
+                    type: string
+                    example: "24"
+                    description: "Durée initiale du contrat (mois)."
+                  ctrValidityCode:
+                    type: string
+                    example: "val"
+                    description: "Code de validité du contrat."
+                  ctrValidity:
+                    type: string
+                    example: "En cours"
+                    description: "Statut de validité du contrat."
+                  notifyDate:
+                    type: string
+                    format: date
+                    description: "Date de notification automatique."
+                  signatureDate:
+                    type: string
+                    format: date
+                    example: "2025-03-31"
+                    description: "Date de signature."
+                  effectiveDate:
+                    type: string
+                    format: date
+                    example: "2025-03-31"
+                    description: "Date début."
+                  durationFerm:
+                    type: string
+                    description: "Durée ferme (mois)."
+                  withoutEndDate:
+                    type: string
+                    enum:
+                      - "Yes"
+                      - "No"
+                    example: "No"
+                    description: "Contrat sans date de fin."
+                  originalEndDate:
+                    type: string
+                    format: date
+                    example: "2028-03-31"
+                    description: "Date de fin initiale."
+                  updatedEndDate:
+                    type: string
+                    format: date
+                    example: "2025-04-09"
+                    description: "Date de fin réactualisée."
+                  dateFerm:
+                    type: string
+                    format: date
+                    description: "Date de fin ferme."
+                  termination:
+                    type: string
+                    enum:
+                      - "Yes"
+                      - "No"
+                    example: "No"
+                    description: "Contrat résilié ou non."
+                  terminationDate:
+                    type: string
+                    format: date
+                    example: "2025-04-09"
+                    description: "Date de résiliation."
+                    nullable: true
+                  terminationComment:
+                    type: string
+                    description: "Commentaire de résiliation."
+                  payTermCode:
+                    type: string
+                    example: "10"
+                    description: "Code de conditions de paiement."
+                  payTerm:
+                    type: string
+                    example: "30 jours date de facture"
+                    description: "Conditions de paiement."
+                  amount:
+                    type: string
+                    example: "0.0000000000"
+                    description: "Montant global."
+                  amountEntry:
+                    type: string
+                    example: "0.0000000000"
+                    description: "Montant du contrat HT."
+                  tva:
+                    type: string
+                    example: "French VAT (20%)"
+                    description: "Information TVA."
+                  unit:
+                    type: string
+                    example: "EUR"
+                    description: "Unité monétaire."
+                  jurisdiction:
+                    type: string
+                    description: "Juridiction applicable."
+                  penalty:
+                    type: string
+                    description: "Clause pénale."
+                  payment:
+                    type: string
+                    description: "Modalités de paiement."
+                  priceConditions:
+                    type: string
+                    description: "Conditions tarifaires."
+                  seuilRenego:
+                    type: string
+                    description: "Seuils de renégociation."
+                  invoiceConditions:
+                    type: string
+                    description: "Conditions de facturation."
+                  delivery:
+                    type: string
+                    description: "Conditions de livraison."
+                  garantieConditions:
+                    type: string
+                    description: "Conditions de garantie."
+                  complaintProcedure:
+                    type: string
+                    description: "Procédure de réclamation."
+                  returnProcedure:
+                    type: string
+                    description: "Procédure de retour."
+                  choiceCriteria:
+                    type: string
+                    description: "Critères de choix."
+                  beginDatePayment:
+                    type: string
+                    format: date
+                    example: "2025-04-09"
+                    description: "Début de période de paiement."
+                  calculatedEndDate:
+                    type: string
+                    format: date
+                    example: "2028-03-31"
+                    description: "Date de fin calculée."
+                  daysToExpire:
+                    type: integer
+                    example: 1087
+                    description: "Nombre de jours restants avant expiration."
+              contractContacts:
+                type: array
+                required: [firstName, lastName, email, login]
+                items:
+                  type: object
+                  properties:
+                    firstName:
+                      type: string
+                    lastName:
+                      type: string
+                    email:
+                      type: string
+                    profilLabel:
+                      type: string
+                    login:
+                      type: string
+              contractOrgas:
+                type: array
+                items:
+                  type: object
+                  required: [orgaLevel, orgaNode]
+                  properties:
+                    orgaLabel:
+                      type: string
+                    orgaLevel:
+                      type: string
+                      description: "Niveau organisationnel. Clé primaire composite unique avec orgaNode."
+                    orgaNode:
+                      type: string
+                      description: "Identifiant du noeud organisationnel. Clé primaire composite unique avec orgaLevel."
+              contractFamily:
+                type: array
+                items:
+                  type: object
+                  required: [famLevel, famNode]
+                  properties:
+                    famLabel:
+                      type: string
+                      description: "Libellé de la famille."
+                    famLevel:
+                      type: string
+                      description: "Niveau de famille. Clé primaire composite unique avec famNode."
+                    famNode:
+                      type: string
+                      description: "Identifiant du noeud de famille. Clé primaire composite unique avec famLevel."
+              patrimoines:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    patLevel:
+                      type: string
+                    patNode:
+                      type: string
+              programmes:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    progLevel:
+                      type: string
+                    progNode:
+                      type: string
+              operations:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    operCode:
+                      type: string
+                    operLabel:
+                      type: string
+              pot:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    potCode:
+                      type: string
+                    potLabel:
+                      type: string
+    ContractsErrorResponse:
+      type: object
+      properties:
+        erreurs:
+          type: array
+          items:
+            type: object
+            properties:
+              code:
+                type: string
+                example: "ERR-QUE-001"
+              message:
+                type: string
+                example: "Le mode doit être renseigné."
+      example:
+        erreurs:
+          - code: "ERR-QUE-101"
+            message: "Le mode doit être renseigné."
+          - code: "ERR-QUE-102"
+            message: "Le mode doit être soit 'full', soit 'diff'."
+          - code: "ERR-QUE-103"
+            message: "Le format spécifié doit être 'json' , 'xml' ou 'scim'."
+          - code: "ERR-QUE-104"
+            message: "Erreur : Au moins un paramètre doit être fourni."
+          - code: "ERR-QUE-105"
+            message: "Une date (date_from ou date_to) est manquante."
+          - code: "ERR-QUE-106"
+            message: "Le paramètre date_from doit être inférieur à date_to."
+          - code: "ERR-QUE-107"
+            message: "L’intervalle entre date_from et date_to ne peut pas dépasser 2 mois."
+            
+    # API Commandes
+    OrdersResponse:
+      type: object
+      properties:
+        header:
+          type: object
+          properties:
+            apiName:
+              type: string
+              example: "Orders"
+            format:
+              type: string
+              example: "json"
+            totalRow:
+              type: integer
+              example: 1
+        orders:
+          type: array
+          items:
+            type: object
+            properties:
+              dataOrder:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  objectId:
+                    type: integer
+                    example: 1
+                  ordIdOrigin:
+                    type: integer
+                    example: 1
+                  orderCode:
+                    type: string
+                    example: "PO000001"
+                  orderLabel:
+                    type: string
+                    example: "D.A. du 21/03/2025"
+                  ordTypeCode:
+                    type: string
+                    example: "default"
+                  ordExtCode:
+                    type: string
+                    example: ""
+                  ordRef:
+                    type: string
+                    example: ""
+                  basketId:
+                    type: integer
+                    example: 5
+                  orderSupId:
+                    type: integer
+                    example: 3
+                  orderSupName:
+                    type: string
+                    example: "TEST_COMP"
+                  supNatId:
+                    type: string
+                    example: ""
+                  supNatIdType:
+                    type: string
+                    example: ""
+                  created:
+                    type: string
+                    format: date
+                    example: "2025-03-21"
+                  modified:
+                    type: string
+                    format: date
+                    example: "2025-03-21"
+                  loginCreated:
+                    type: string
+                    example: "JohnD"
+                  loginModified:
+                    type: string
+                    example: "JohnD"
+                  statusCode:
+                    type: string
+                    example: "end"
+                  statusLabel:
+                    type: string
+                    example: "Terminée"
+                  ordOrderDate:
+                    type: string
+                    format: date
+                    example: "2025-03-21"
+                  oitemsTotalAmount:
+                    type: number
+                    format: float
+                    example: 120000.00
+                  unitCodeCurrency:
+                    type: string
+                    example: "EUR"
+                  ordComment:
+                    type: string
+                    example: ""
+                  incoCode:
+                    type: string
+                    example: ""
+                  ordIncoPlace:
+                    type: string
+                    example: ""
+                  paytermCode:
+                    type: string
+                    example: "10"
+                  paytermLabel:
+                    type: string
+                    example: "30 jours date de facture"
+                  paymentTypeCode:
+                    type: string
+                    example: ""
+                  paymentTypeLabel:
+                    type: string
+                    example: ""
+                  ordFreeBudget:
+                    type: string
+                    example: "No"
+                  ordAmendmentNum:
+                    type: string
+                    example: "0"
+                  ordTrackTimeSheet:
+                    type: string
+                    example: "0"
+                  legalCompCode:
+                    type: string
+                    example: "V90"
+                  legalCompLegalForm:
+                    type: string
+                    example: ""
+                  legalCompLabel:
+                    type: string
+                    example: "Seqens"
+                  orgaLevel:
+                    type: string
+                    example: "site"
+                  orgaNode:
+                    type: string
+                    example: "SEM_DD20"
+                  orgaLabel:
+                    type: string
+                    example: "DD Hauts-de-Seine"
+              orderContacts:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    contactRequesterFirstname:
+                      type: string
+                      example: "John"
+                    contactRequesterLastname:
+                      type: string
+                      example: "DOE"
+                    contactRequesterEmail:
+                      type: string
+                      format: email
+                      example: "john.doe@test.eu"
+                    contactBillingFirstname:
+                      type: string
+                      example: ""
+                    contactBillingLastname:
+                      type: string
+                      example: ""
+                    contactBillingEmail:
+                      type: string
+                      format: email
+                      example: ""
+                    contactDeliveryFirstname:
+                      type: string
+                      example: ""
+                    contactDeliveryLastname:
+                      type: string
+                      example: ""
+                    contactDeliveryEmail:
+                      type: string
+                      format: email
+                      example: ""
+                    contactSupplierFirstname:
+                      type: string
+                      example: "Malcom"
+                    contactSupplierLastname:
+                      type: string
+                      example: "X"
+                    contactSupplierEmail:
+                      type: string
+                      format: email
+                      example: "Malc.x@test.com"
+              orderItems:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    oitemId:
+                      type: integer
+                      example: 8
+                    oitemLabel:
+                      type: string
+                      example: "Forfait annuel Maintenance Ascenseurs HP2"
+                    oitemFamLabel:
+                      type: string
+                      example: "Ascenseurs"
+                    oitemFamNode:
+                      type: string
+                      example: "325"
+                    oitemFamLevel:
+                      type: string
+                      example: "ssfam"
+                    oitemQuantity:
+                      type: number
+                      format: float
+                      example: 1
+                    oitemTotalAmount:
+                      type: number
+                      format: float
+                      example: 120000.00
+              addresses:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    type:
+                      type: string
+                      enum: [billing, delivery]
+                      example: billing
+                    adrNum:
+                      type: string
+                      example: ""
+                    adrNomComplt:
+                      type: string
+                      example: ""
+                    adrVoie:
+                      type: string
+                      example: "Bd Garibaldi 14-16"
+                    adrVoieComplt:
+                      type: string
+                      example: ""
+                    zipCode:
+                      type: string
+                      example: "92130"
+                    zipLabel:
+                      type: string
+                      example: "Issy-les-Moulineaux"
+                    countryCode:
+                      type: string
+                      example: "FR"
+                    countryLabel:
+                      type: string
+                      example: "FRANCE"
+    OrdersErrorResponse:
+      type: object
+      properties:
+        erreurs:
+          type: array
+          items:
+            type: object
+            properties:
+              code:
+                type: string
+                example: "ERR-QUE-001"
+              message:
+                type: string
+                example: "Le mode doit être renseigné."
+      example:
+        erreurs:
+          - code: "ERR-QUE-101"
+            message: "Le mode doit être renseigné."
+          - code: "ERR-QUE-102"
+            message: "Le mode doit être soit 'full', soit 'diff'."
+          - code: "ERR-QUE-103"
+            message: "Le format spécifié doit être 'json' , 'xml' ou 'scim'."
+          - code: "ERR-QUE-104"
+            message: "Erreur : Au moins un paramètre doit être fourni."
+          - code: "ERR-QUE-105"
+            message: "Une date (date_from ou date_to) est manquante."
+          - code: "ERR-QUE-106"
+            message: "Le paramètre date_from doit être inférieur à date_to."
+          - code: "ERR-QUE-107"
+            message: "L’intervalle entre date_from et date_to ne peut pas dépasser 2 mois."
+            
+    # API Factures
+    InvoiceRequest:
+      type: object
+      required:
+        - invoiceType
+        - invoiceRef
+        - invoiceDate
+        - invoiceDueDate
+        - invoiceUnitCodeCurrency
+        - invoiceAmountHT
+        - invoiceAmountTTC
+        - supId
+        - orgaLevel
+        - orgaNode
+      properties:
+        invoiceType:
+          type: string
+          enum: ["CRE", "INV"]
+          example: INV
+          description: |
+            Type de facture :
+            - `CRE` : Avoir
+            - `INV` : Facture
+        invoiceRef:
+          type: string
+          example: FACT2104LYS
+        invoiceLinkedCode:
+          type: string
+          example: ""
+        invoiceDate:
+          type: string
+          format: date
+          example: 2025-05-01
+          description: format ISO 8601 (`YYYY-MM-DD`)
+        invoiceDueDate:
+          type: string
+          format: date
+          example: 2025-05-10
+          description: format ISO 8601 (`YYYY-MM-DD`)
+        invoiceUnitCodeCurrency:
+          type: string
+          example: EUR
+          description: >
+            Code de la devise au format ISO 4217 (ex: EUR, USD, CHF).
+            Ce champ doit contenir un code alphabétique à 3 lettres correspondant à une devise valide.
+        invoiceAmountHT:
+          type: number
+          format: float
+          example: 1200.0
+          description: >
+            Montant hors taxes.
+            - Séparateur de décimales : `.`
+            - Aucun séparateur de milliers
+            - Longueur maximale totale : 28 caractères
+            - Nombre maximal de décimales : 10
+        invoiceAmountTTC:
+          type: number
+          format: float
+          example: 1440.0
+          description: >
+            Montant toutes taxes comprises.
+            - Séparateur de décimales : `.`
+            - Aucun séparateur de milliers
+            - Longueur maximale totale : 28 caractères
+            - Nombre maximal de décimales : 10
+        supId:
+          type: integer
+          example: 3
+        supNatId:
+          type: string
+          example: "3"
+        ctrId:
+          type: integer
+          example: 415
+        ctrCode:
+          type: string
+          example: "CONTRAT-2025-001"
+          description: Référence du contrat liée à la facture, si applicable.
+        orderId:
+          type: integer
+          example: 554
+        orderCode:
+          type: string
+          example: "CMD-2025-045"
+          description: Référence de la commande liée à la facture, si applicable.
+        orgaLevel:
+          type: string
+          example: act
+        orgaNode:
+          type: string
+          example: V90
+        legalCompCode:
+          type: string
+          example: V90
+          description: >
+            Code de la société légale liée à la facture.
+            Doit correspondre à une des entités légales enregistrées.
+          enum:
+            - V90   # Seqens
+            - SES   # Seqens Solidarités
+            - ADL   # Adlis
+            - BRE   # Brénu
+            - ART   # Réserve des arts
+            - CHA   # SCCV Saint Charles
+            - SEA   # Seqens Accessions
+            - LOG   # Logétude
+            - ONV   # Opérateur National de Vente
+            - SEM   # Semine
+        invoiceCreation:
+          type: string
+          format: timestamp
+          example: "1742548198000"
+        invoiceModification:
+          type: string
+          format: timestamp
+          example: "1742550236000"
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              label:
+                type: string
+                example: "Forfait annuel Maintenance Ascenseurs HP2"
+              amount:
+                type: number
+                format: float
+                example: 120000.0
+              tvaCode:
+                type: string
+                example: "Se référer au référentiel TVA de Seqens"
+              unitCodeCurrency:
+                type: string
+                example: "EUR"
+                description: >
+                  Code de la devise au format ISO 4217 (ex: EUR, USD, CHF).
+                  Ce champ doit contenir un code alphabétique à 3 lettres correspondant à une devise valide.
+              quantity:
+                type: number
+                format: float
+                example: 1.0
+              unitCode:
+                type: string
+                example: "EA"
+        status:
+          type: string
+          example: ini
+          description: Statut indiquant que l'élément est en cours de conception et n'est pas encore complètement défini.
+          
+    InvoicePostRequest:
+      type: object
+      required:
+        - invoiceType
+        - invoiceRef
+        - invoiceDate
+        - invoiceDueDate
+        - invoiceUnitCodeCurrency
+        - invoiceAmountHT
+        - invoiceAmountTTC
+        - supId
+        - orgaLevel
+        - orgaNode
+      properties:
+        invoiceType:
+          type: string
+          example: INV
+        invoiceRef:
+          type: string
+          example: FACT2104LYS
+        invoiceLinkedCode:
+          type: string
+          example: ""
+        invoiceDate:
+          type: string
+          format: date
+          example: 2025-05-01
+          description: format ISO 8601 (`YYYY-MM-DD`)
+        invoiceDueDate:
+          type: string
+          format: date
+          example: 2025-05-10
+          description: format ISO 8601 (`YYYY-MM-DD`)
+        invoiceUnitCodeCurrency:
+          type: string
+          example: EUR
+          description: |
+            Code de la devise au format ISO 4217 (ex: EUR, USD, CHF).
+            Ce champ doit contenir un code alphabétique à 3 lettres correspondant à une devise valide.
+        invoiceAmountHT:
+          type: number
+          format: float
+          example: 1200.0
+          description: |
+            Montant hors taxes.
+            - Séparateur de décimales : `.`
+            - Aucun séparateur de milliers dans le JSON (ex: `1200.1234567890`)
+            - Longueur maximale totale : 28 caractères
+            - Nombre maximal de décimales : 10
+        invoiceAmountTTC:
+          type: number
+          format: float
+          example: 1440.0
+          description: |
+            Montant toutes taxes comprises.
+            - Séparateur de décimales : `.`
+            - Aucun séparateur de milliers dans le JSON (ex: `1440.1234567890`)
+            - Longueur maximale totale : 28 caractères
+            - Nombre maximal de décimales : 10
+        supId:
+          type: integer
+          example: 3
+        supNatId:
+          type: string
+          example: "30137403900032"
+        ctrId:
+          type: integer
+          example: 415
+        ctrCode:
+          type: string
+          example: "CONTRAT-2025-001"
+          description: Référence du contrat liée à la facture, si applicable.
+        orderId:
+          type: integer
+          example: 554
+        orderCode:
+          type: string
+          example: "CMD-2025-045"
+          description: Référence de la commande liée à la facture, si applicable.
+        orgaLevel:
+          type: string
+          example: act
+        orgaNode:
+          type: string
+          example: V90
+        legalCompCode:
+          type: string
+          description: |
+            Code de la société légale liée à la facture.
+            Doit correspondre à une des entités légales enregistrées.
+          enum:
+            - V90   # Seqens
+            - SES   # Seqens Solidarités
+            - ADL   # Adlis
+            - BRE   # Brénu
+            - ART   # Réserve des arts
+            - CHA   # SCCV Saint Charles
+            - SEA   # Seqens Accessions
+            - LOG   # Logétude
+            - ONV   # Opérateur National de Vente
+            - SEM   # Semine
+          example: V90
+    InvoiceSuccessResponse:
+      type: object
+      description: Réponse en cas de succès lors de l'import d'une facture
+      required:
+        - date
+        - format
+        - impId
+        - invoiceCode
+        - invoiceRef
+        - invoiceId
+      properties:
+        date:
+          type: string
+          format: date-time
+          example: "2025-05-11T19:29:57.473"
+        format:
+          type: string
+          enum: ["JSON"]
+          example: "JSON"
+        impId:
+          type: integer
+          example: 107
+        invoiceCode:
+          type: string
+          example: "INV000006"
+        invoiceRef:
+          type: string
+          example: "FACT2104LYS"
+        invoiceId:
+          type: integer
+          example: 6
+    InvoiceErrorResponse:
+      type: object
+      description: Réponse contenant des erreurs bloquantes
+      required:
+        - date
+        - format
+        - errors
+      properties:
+        date:
+          type: string
+          format: date-time
+          example: "2025-05-11T22:04:24.67"
+        format:
+          type: string
+          enum: ["JSON"]
+          example: "JSON"
+        errors:
+          type: array
+          items:
+            type: object
+            required:
+              - noeud
+              - code
+              - message
+            properties:
+              noeud:
+                type: string
+                example: "ORGA_LEVEL"
+              code:
+                type: string
+                enum:
+                  - ERR-01
+                  - ERR-02
+                  - ERR-03
+                  - ERR-04
+                  - ERR-05
+                  - ERR-06
+                  - ERR-07
+                  - ERR-08
+                example: "ERR-08"
+                description: |
+                  Codes d'erreur possibles :
+                  - ERR-01 : Erreur type de facture
+                  - ERR-02 : Numéro de facture obligatoire
+                  - ERR-03 : La date de facture est requise
+                  - ERR-04 : La date d'échéance est requise
+                  - ERR-05 : Le montant HT est requis
+                  - ERR-06 : Un identifiant fournisseur est requis
+                  - ERR-07 : Une organisation est requis
+              message:
+                type: string
+                example: "Le niveau d'organisation est requis."
+                
+    # API Factures
+    ProgramsResponse:
+      type: object
+      properties:
+        header:
+          type: object
+          properties:
+            apiName:
+              type: string
+              example: programs
+            format:
+              type: string
+              example: json
+            totalRow:
+              type: integer
+              example: 3115
+        programs:
+          type: array
+          items:
+            type: object
+            required: [code, orgaLevel, orgaNode, orgaId, orgaLabel, status]
+            properties:
+              code:
+                type: string
+                example: "8295"
+                description: "Code programme"
+              label:
+                type: string
+                example: ST DENIS Landy
+              labelComplt:
+                type: string
+                example: BRS
+              orgaLevel:
+                type: string
+                example: "act"
+                description: "Niveau d'organisation"
+              orgaNode:
+                type: string
+                example: "ART"
+                description: "Identifiant du nœud d'organisation"
+              orgaLabel:
+                type: string
+                example: Réserve des arts
+              orgaId:
+                type: string
+                example: "3833"
+              status:
+                type: string
+                enum: ["val", "del"]
+                example: "val"
+                description: |
+                  Statut du rattachement :
+                  - `val` : validé
+                  - `del` : supprimé
+
+        
+        

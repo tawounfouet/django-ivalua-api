@@ -1,0 +1,98 @@
+[
+  {
+    "model": "suppliers.contact",
+    "pk": 1,
+    "fields": {
+      "supplier": 1,
+      "is_internal": false,
+      "first_name": "Alice",
+      "last_name": "Dubois",
+      "email": "alice.dubois@acme-corp.com",
+      "login": ""
+    }
+  },
+  {
+    "model": "suppliers.contact",
+    "pk": 2,
+    "fields": {
+      "supplier": 1,
+      "is_internal": false,
+      "first_name": "Robert",
+      "last_name": "Martin",
+      "email": "r.martin@acme-corp.com",
+      "login": ""
+    }
+  },
+  {
+    "model": "suppliers.contact",
+    "pk": 3,
+    "fields": {
+      "supplier": 1,
+      "is_internal": true,
+      "first_name": "Marie",
+      "last_name": "Laurent",
+      "email": "marie.laurent@ivalua.com",
+      "login": "mlaurent"
+    }
+  },
+  {
+    "model": "suppliers.contact",
+    "pk": 4,
+    "fields": {
+      "supplier": 2,
+      "is_internal": false,
+      "first_name": "Thomas",
+      "last_name": "Bernard",
+      "email": "t.bernard@techsolutions.fr",
+      "login": ""
+    }
+  },
+  {
+    "model": "suppliers.contact",
+    "pk": 5,
+    "fields": {
+      "supplier": 3,
+      "is_internal": false,
+      "first_name": "Sophie",
+      "last_name": "Petit",
+      "email": "s.petit@syndic-fleurs.fr",
+      "login": ""
+    }
+  },
+  {
+    "model": "suppliers.contact",
+    "pk": 6,
+    "fields": {
+      "supplier": 4,
+      "is_internal": false,
+      "first_name": "Jean",
+      "last_name": "Martin",
+      "email": "jean.martin@martin-consulting.fr",
+      "login": ""
+    }
+  },
+  {
+    "model": "suppliers.contact",
+    "pk": 7,
+    "fields": {
+      "supplier": 5,
+      "is_internal": false,
+      "first_name": "John",
+      "last_name": "Smith",
+      "email": "j.smith@globalservices.co.uk",
+      "login": ""
+    }
+  },
+  {
+    "model": "suppliers.contact",
+    "pk": 8,
+    "fields": {
+      "supplier": 2,
+      "is_internal": true,
+      "first_name": "Paul",
+      "last_name": "Durand",
+      "email": "paul.durand@ivalua.com",
+      "login": "pdurand"
+    }
+  }
+]

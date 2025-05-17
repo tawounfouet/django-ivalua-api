@@ -1,0 +1,80 @@
+import os
+from django.core.management.base import BaseCommand
+from accounting.management.commands.import_pcg import Command as ImportPCGCommand
+from accounting.management.commands.import_fiscal_years import Command as ImportFiscalYearsCommand
+from accounting.management.commands.import_journals import Command as ImportJournalsCommand
+from accounting.management.commands.import_accounting_types import Command as ImportAccountingTypesCommand
+
+
+class Command(BaseCommand):
+    help = 'Import all accounting data from CSV files'
+
+    def add_arguments(self, parser):
+        parser.add_argument('data_dir', type=str, help='Directory containing the CSV files')
+
+    def handle(self, *args, **options):
+        data_dir = options['data_dir']
+        
+        # Normaliser le chemin pour gérer les problèmes Windows/MinGW
+        data_dir = os.path.normpath(data_dir)
+        self.stdout.write(self.style.NOTICE(f'Recherche des données dans le répertoire: {data_dir}'))
+        
+        # Vérifier aussi le répertoire local si le chemin absolu ne fonctionne pas
+        if not os.path.exists(data_dir) or not os.path.isdir(data_dir):
+            # Essayer avec un chemin relatif à l'application accounting
+            app_data_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), 'data')
+            self.stdout.write(self.style.NOTICE(f'Essai avec le répertoire de données local: {app_data_dir}'))
+            
+            if os.path.exists(app_data_dir) and os.path.isdir(app_data_dir):
+                data_dir = app_data_dir
+            else:
+                self.stdout.write(self.style.ERROR(f'Impossible de trouver un répertoire de données valide'))
+                return
+        
+        self.stdout.write(self.style.NOTICE(f'Utilisation du répertoire de données: {data_dir}'))
+        
+        pcg_file = os.path.join(data_dir, 'export_comptes_pcg.csv')
+        fiscal_years_file = os.path.join(data_dir, 'exercice_comptable.csv')
+        journals_file = os.path.join(data_dir, 'journal_comptable.csv')
+        accounting_types_file = os.path.join(data_dir, 'type-de-comptabilite.csv')
+        
+        # Vérifier l'existence des fichiers
+        self.stdout.write(self.style.NOTICE(f'Vérification des fichiers:'))
+        self.stdout.write(f'  - PCG: {pcg_file} {"(existe)" if os.path.exists(pcg_file) else "(n\'existe pas)"}')
+        self.stdout.write(f'  - Exercices: {fiscal_years_file} {"(existe)" if os.path.exists(fiscal_years_file) else "(n\'existe pas)"}')
+        self.stdout.write(f'  - Journaux: {journals_file} {"(existe)" if os.path.exists(journals_file) else "(n\'existe pas)"}')
+        self.stdout.write(f'  - Types: {accounting_types_file} {"(existe)" if os.path.exists(accounting_types_file) else "(n\'existe pas)"}')
+        
+        # Import accounting types
+        if os.path.exists(accounting_types_file):
+            self.stdout.write(self.style.NOTICE('Importing accounting types...'))
+            cmd = ImportAccountingTypesCommand()
+            cmd.handle(file_path=accounting_types_file)
+        else:
+            self.stdout.write(self.style.WARNING(f'File not found: {accounting_types_file}'))
+        
+        # Import fiscal years
+        if os.path.exists(fiscal_years_file):
+            self.stdout.write(self.style.NOTICE('Importing fiscal years...'))
+            cmd = ImportFiscalYearsCommand()
+            cmd.handle(file_path=fiscal_years_file)
+        else:
+            self.stdout.write(self.style.WARNING(f'File not found: {fiscal_years_file}'))
+        
+        # Import journals
+        if os.path.exists(journals_file):
+            self.stdout.write(self.style.NOTICE('Importing accounting journals...'))
+            cmd = ImportJournalsCommand()
+            cmd.handle(file_path=journals_file)
+        else:
+            self.stdout.write(self.style.WARNING(f'File not found: {journals_file}'))
+        
+        # Import PCG (chart of accounts)
+        if os.path.exists(pcg_file):
+            self.stdout.write(self.style.NOTICE('Importing chart of accounts...'))
+            cmd = ImportPCGCommand()
+            cmd.handle(file_path=pcg_file)
+        else:
+            self.stdout.write(self.style.WARNING(f'File not found: {pcg_file}'))
+        
+        self.stdout.write(self.style.SUCCESS('All accounting data imported successfully'))

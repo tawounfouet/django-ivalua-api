@@ -1,0 +1,83 @@
+[
+  {
+    "model": "suppliers.contactrole",
+    "pk": 1,
+    "fields": {
+      "contact": 1,
+      "code": "COM",
+      "label": "Commercial Contact"
+    }
+  },
+  {
+    "model": "suppliers.contactrole",
+    "pk": 2,
+    "fields": {
+      "contact": 2,
+      "code": "TEC",
+      "label": "Technical Contact"
+    }
+  },
+  {
+    "model": "suppliers.contactrole",
+    "pk": 3,
+    "fields": {
+      "contact": 3,
+      "code": "ACH",
+      "label": "Buyer"
+    }
+  },
+  {
+    "model": "suppliers.contactrole",
+    "pk": 4,
+    "fields": {
+      "contact": 4,
+      "code": "COM",
+      "label": "Commercial Contact"
+    }
+  },
+  {
+    "model": "suppliers.contactrole",
+    "pk": 5,
+    "fields": {
+      "contact": 4,
+      "code": "ADM",
+      "label": "Administrative Contact"
+    }
+  },
+  {
+    "model": "suppliers.contactrole",
+    "pk": 6,
+    "fields": {
+      "contact": 5,
+      "code": "ADM",
+      "label": "Administrative Contact"
+    }
+  },
+  {
+    "model": "suppliers.contactrole",
+    "pk": 7,
+    "fields": {
+      "contact": 6,
+      "code": "COM",
+      "label": "Commercial Contact"
+    }
+  },
+  {
+    "model": "suppliers.contactrole",
+    "pk": 8,
+    "fields": {
+      "contact": 7,
+      "code": "COM",
+      "label": "Commercial Contact"
+    }
+  },
+  {
+    "model": "suppliers.contactrole",
+    "pk": 9,
+    "fields": {
+      "contact": 8,
+      "code": "ACH",
+      "label": "Buyer"
+    }
+  }
+]

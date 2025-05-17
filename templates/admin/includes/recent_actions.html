@@ -1,0 +1,29 @@
+{% load i18n %}
+
+<div class="module" id="recent-actions-module">
+  <h2>{% trans 'Recent Actions' %}</h2>
+  <h3>{% trans 'My Actions' %}</h3>
+  {% if actions %}
+    <ul class="actionlist">
+      {% for action in actions %}
+        <li class="{% if action.is_addition %}addlink{% endif %}{% if action.is_change %}changelink{% endif %}{% if action.is_deletion %}deletelink{% endif %}">
+          {% if action.is_addition %}{% trans 'Added' %}{% endif %}
+          {% if action.is_change %}{% trans 'Changed' %}{% endif %}
+          {% if action.is_deletion %}{% trans 'Deleted' %}{% endif %}
+          {% if action.content_type %}
+            <span class="mini">{% filter capfirst %}{{ action.content_type.name }}{% endfilter %}</span>
+          {% else %}
+            <span class="mini">{% trans 'Unknown content' %}</span>
+          {% endif %}
+          {% if action.object_repr %}
+            <a href="{{ action.get_admin_url }}">{{ action.object_repr }}</a>
+          {% else %}
+            <span class="mini">{% trans 'Unknown object' %}</span>
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>{% trans 'No recent actions.' %}</p>
+  {% endif %}
+</div>

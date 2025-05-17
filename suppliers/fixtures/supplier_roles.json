@@ -1,0 +1,86 @@
+[
+  {
+    "model": "suppliers.supplierrole",
+    "pk": 1,
+    "fields": {
+      "supplier": 1,
+      "orga_level": "DIV",
+      "orga_node": "DIV001",
+      "role_code": "PREF",
+      "role_label": "Preferred Supplier",
+      "begin_date": "2023-01-15",
+      "end_date": "2025-01-14",
+      "status": "val"
+    }
+  },
+  {
+    "model": "suppliers.supplierrole",
+    "pk": 2,
+    "fields": {
+      "supplier": 1,
+      "orga_level": "DIV",
+      "orga_node": "DIV002",
+      "role_code": "APPR",
+      "role_label": "Approved Supplier",
+      "begin_date": "2023-01-15",
+      "end_date": null,
+      "status": "val"
+    }
+  },
+  {
+    "model": "suppliers.supplierrole",
+    "pk": 3,
+    "fields": {
+      "supplier": 2,
+      "orga_level": "DIV",
+      "orga_node": "DIV001",
+      "role_code": "STRA",
+      "role_label": "Strategic Partner",
+      "begin_date": "2023-02-10",
+      "end_date": "2026-02-09",
+      "status": "val"
+    }
+  },
+  {
+    "model": "suppliers.supplierrole",
+    "pk": 4,
+    "fields": {
+      "supplier": 3,
+      "orga_level": "REG",
+      "orga_node": "REG001",
+      "role_code": "APPR",
+      "role_label": "Approved Supplier",
+      "begin_date": "2023-01-20",
+      "end_date": null,
+      "status": "val"
+    }
+  },
+  {
+    "model": "suppliers.supplierrole",
+    "pk": 5,
+    "fields": {
+      "supplier": 4,
+      "orga_level": "DIV",
+      "orga_node": "DIV003",
+      "role_code": "CONS",
+      "role_label": "Consultant",
+      "begin_date": "2023-03-05",
+      "end_date": "2023-12-31",
+      "status": "val"
+    }
+  },
+  {
+    "model": "suppliers.supplierrole",
+    "pk": 6,
+    "fields": {
+      "supplier": 5,
+      "orga_level": "DIV",
+      "orga_node": "DIV002",
+      "role_code": "APPR",
+      "role_label": "Approved Supplier",
+      "begin_date": "2023-01-30",
+      "end_date": null,
+      "status": "ini"
+    }
+  }
+]

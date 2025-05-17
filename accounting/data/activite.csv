@@ -1,0 +1,17 @@
+CODE_ACTIVITE;LIB_ACTIVITE
+???;INCONNUE
+ADM;Administratif           
+FIN;Frais interventions     
+FST;Frais structure         
+GLR;Gestion locative récup. 
+GLS;Gestion locative        
+GPR;Gestion des prêts (gpr) 
+MOU;M.o.u.s.                
+PRE;Paie récup./mandat gest.
+PSE;Paie sté/mandat gestion 
+REC;Récupérable             
+REF;Refacturable            
+SIE;Siège (sie)             
+SPR;Charges structure (spr) 
+TRF;Transfert               
+VTE;Vente                   

@@ -1,0 +1,82 @@
+[
+  {
+    "model": "authentication.userprofile",
+    "pk": 1,
+    "fields": {
+      "user": 1,
+      "bio": "System administrator with expertise in Django and related technologies.",
+      "date_of_birth": "1985-01-15",
+      "address": "123 Admin Street",
+      "city": "Paris",
+      "country": "France",
+      "organization": "Ivalua",
+      "social_linkedin": "https://linkedin.com/in/admin-user",
+      "notification_email": true,
+      "notification_sms": true
+    }
+  },
+  {
+    "model": "authentication.userprofile",
+    "pk": 2,
+    "fields": {
+      "user": 2,
+      "bio": "Finance professional with 10+ years of experience in procurement systems.",
+      "date_of_birth": "1980-05-20",
+      "address": "456 Finance Avenue",
+      "city": "Lyon",
+      "country": "France",
+      "organization": "Ivalua",
+      "social_linkedin": "https://linkedin.com/in/staff-member",
+      "notification_email": true,
+      "notification_sms": false
+    }
+  },
+  {
+    "model": "authentication.userprofile",
+    "pk": 3,
+    "fields": {
+      "user": 3,
+      "bio": "Account manager representing a key supplier partner.",
+      "date_of_birth": "1990-10-08",
+      "address": "789 Supplier Road",
+      "city": "London",
+      "country": "United Kingdom",
+      "organization": "Example Supplier Corp",
+      "social_linkedin": "https://linkedin.com/in/supplier-contact",
+      "notification_email": true,
+      "notification_sms": true
+    }
+  },
+  {
+    "model": "authentication.userprofile",
+    "pk": 4,
+    "fields": {
+      "user": 4,
+      "bio": "Regular user of the procurement system in the operations department.",
+      "date_of_birth": "1992-03-25",
+      "address": "101 User Street",
+      "city": "Marseille",
+      "country": "France",
+      "organization": "Ivalua",
+      "social_linkedin": "https://linkedin.com/in/regular-user",
+      "notification_email": true,
+      "notification_sms": false
+    }
+  },
+  {
+    "model": "authentication.userprofile",
+    "pk": 5,
+    "fields": {
+      "user": 5,
+      "bio": "This account is currently inactive.",
+      "date_of_birth": "1988-07-12",
+      "address": "202 Inactive Road",
+      "city": "Nice",
+      "country": "France",
+      "organization": "Ivalua",
+      "social_linkedin": "https://linkedin.com/in/inactive-user",
+      "notification_email": false,
+      "notification_sms": false
+    }
+  }
+]
